@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Speech Detection</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="login.css">
+    <script>
+
+        let modal = document.getElementById('id01');
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+<header class="header">
+    <nav>
+        <div class="navtitle">
+            <h2><a href="#">1석5조</a></h2>
+        </div>
+        <ul class="top_menu">
+            <li>
+                <div sec:authorize="hasRole('USER')" class="log_list">
+                    <span sec:authentication="name" class="user-name"></span><span class="user-name1">님 환영합니다.</span>
+                </div>
+            </li>
+            <li>
+                <div sec:authorize="!isAuthenticated()" class="log_list">
+                    <button type="button" class="navBtn" onclick="document.getElementById('id01').style.display='block'"
+                            style="width:auto;">로그인
+                    </button>
+                    <button type="button" class="navBtn" onclick="location.href='/register'"
+                            style="width:auto;">회원가입
+                    </button>
+                </div>
+            </li>
+            <li>
+                <div sec:authorize="isAuthenticated()" class="log_list">
+                    <button type="button" class="navBtn2" onClick="location.href='/logout'">로그아웃</button>
+                </div>
+            </li>
+
+
+        </ul>
+    </nav>
+
+
+    <div id="id01" class="modal">
+
+        <form class="modal-content animate" th:action="@{/login_post}" method="post">
+            <div class="img_container">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <img th:src="@{/logo.png}" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="login_container">
+                <label for="username"><b>Email</b></label>
+                <input type="text" name="username" id="username" placeholder="ID" required>
+
+                <label for="password"><b>Password</b></label>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+
+                <button type="submit" class="log_btn">Login</button>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember-me">
+                    자동 로그인
+                </label>
+            </div>
+
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancel_btn">
+                    취소
+                </button>
+                <span class="psw">
+                     <a href="/register" style="font-size: 1.25rem">회원가입</a>
+                </span>
+            </div>
+        </form>
+
+    </div>
+
+</header>
+<div class="main">
+    <div class="img_box">
+        <img class="logo" src="logo.png"/>
+    </div>
+
+    <div class="search">
+
+        <div class="input-bar">
+
+            <input type="text" placeholder="검색하려는 API명을 입력해주세요" autocomplete="off" id="keyword">
+            <button class="dictate">
+                <img class="btn_img" src="mic.png">
+                <!--            <a href="https://www.flaticon.com/kr/free-icons/" title="라디오 아이콘">라디오 아이콘  제작자: Kiranshastry - Flaticon</a>-->
+                <i class="ic-mike"></i>
+                <svg width="1.25rem" height="1.25rem" viewBox="0 0 100 100">
+                    <g stroke="#fff" stroke-width="15">
+                        <path d="M20,20 20,80">
+                            <animate attributeName="d" values="M20,40 20,60;M20,20 20,80;M20,40 20,60" dur="1s"
+                                     repeatCount="indefinite"/>
+                        </path>
+                        <path d="M50,10 50,90">
+                            <animate attributeName="d" values="M50,10 50,90;M50,40 50,60;M50,10 50,90" dur="1s"
+                                     repeatCount="indefinite"/>
+                        </path>
+                        <path d="M80,20 80,80">
+                            <animate attributeName="d" values="M80,40 80,60;M80,20 80,80;M80,40 80,60" dur="1s"
+                                     repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+            </button>
+            <form action="/jump/search" method="get" id="searchForm">
+
+                <input type="hidden" id="search_kw" name="search_kw">
+                <button class="dictate" id="search_btn" type="submit"><img class="btn_img" src="search3.png"></button>
+
+            </form>
+        </div>
+    </div>
+
+
+    <script th:src="@{speech.js}"></script>
+</div>
+<div class="footer">
+    <div class="foot">
+        <ul>
+            <li>이용약관</li>
+            <li>개인정보처리방침</li>
+            <li sec:authorize="hasRole('USER')" class="log_list">
+                <a href="/jump/support">문의하기</a>
+            </li>
+            <br>
+            <li>Copyright © oneStoneTwoBird. All Rights Reserved. | 주소 : (06567) 서울특별시 서초구 방배동 1808</li>
+        </ul>
+    </div>
+
+</div>
+</body>
+</html>

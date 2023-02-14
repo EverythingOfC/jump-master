@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Community 로그인</title>
+
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header-container">
+            <a th:href="@{/index}">
+            </a>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <form th:action="@{/login_post}" method="post">
+            <div>
+                <input type="text" name="username" placeholder="ID">
+            </div>
+            <div>
+                <input type="password" name="password" placeholder="Password">
+            </div>
+            <div>
+                <button type="submit">Login</button>
+            </div>
+            <div>
+                <input type="checkbox" name="remember-me">
+                <label>자동 로그인</label>
+            </div>
+            <div>
+                <a href="/register">회원가입</a>
+            </div>
+        </form>
+        <nav>
+            <a href="#">ID 찾기</a> |
+            <a href="#">Password 찾기</a>
+        </nav>
+    </div>
+</main>
+
+<footer>
+</footer>
+
+</body>
+</html>

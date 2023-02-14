@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding-top: 100px;
+    margin: auto;
+    width: 600px;
+    height: auto;
+    max-height:inherit;
+}
+.logo-img{
+    margin: 24px 0 12px 0;
+    position: relative;
+    text-align:center;
+}
+.avatar{
+    margin: auto;
+}
+.sign_check {
+     font-weight: bold;
+     float: left;
+     margin-bottom: 3px;
+}
+.sign_content {
+    padding: 10px;
+}
+.sign-form {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.agree{
+    font-weight: bold;
+    float: right;
+}
+.sign_btn {
+    background-color: #3671c8;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}

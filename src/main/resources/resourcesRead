@@ -1,0 +1,8 @@
+resources : Java 파일을 제외한 html, css, javascript, 환경파일이 위치한 공간
+
+***** 세부사항 ******
+resources/templates : 템플릿 파일(자바 객체와 연동되는 HTML형태의 파일)이 위치한 공간
+resources/static : 프로젝트의 css, javascript, image파일이 위치한 공간
+application.properties : 프로젝트, 데이터베이스 등을 설정하는 코드가 위치한 공간
+템플릿: 자바 코드를 삽입할 수 있는 html파일
+

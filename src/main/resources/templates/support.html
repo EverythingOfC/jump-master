@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/support.css}" type="text/css" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <nav class="navbar">
+        <div class="navbar_logo">
+            <img class="logo" th:src="@{/logo.png}" alt="LOGO">
+            <span class="nav_title"><a href="">1석5조</a></span>
+        </div>
+    </nav>
+</header>
+
+<div class="sup_title">
+    <h2>문의하기</h2>
+    <hr>
+</div>
+<form action="/jump/supportHandle" method="get" id="supForm">
+    <table class="sup_table">
+        <tbody>
+        <tr>
+            <th>
+                <p>api 제목</p>
+            </th>
+            <td>
+                <select name="sup_category" class="select">
+                    <option value="선택"> 선택</option>
+                    <option th:each="sea, loop:${search}" th:text="${sea.title}"></option>  <!-- API제목들을 조회 -->
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">
+                <p>제목</p>
+            </th>
+            <td>
+                <input type="text" id="sup_title" name="sup_title" title="제목 입력" class="input-text" value=""
+                       placeholder="50자 이내 입력 가능" maxlength="50"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <p>등록자</p>
+            </th>
+            <td>
+                <!-- 읽기만 가능-->
+                <input type="text" id="sup_name" class="input-text" name="sup_name" title="이름"
+                       th:value="${user.getName()}" maxlength="10" readonly/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <p>내용</p>
+            </th>
+            <td>
+                <textarea id="sup_content" name="sup_content" maxlength="4000" class="input-textarea h160px" rows="5"
+                          cols="10"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <p>이메일</p>
+            </th>
+            <td>
+                <input type="text" id="sup_email" class="input-text" name="sup_email" th:value="${user.getEmail()}">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div style="text-align: center">
+        <button class="reset_btn" type="reset">재입력</button>
+        <button class="submit_btn" type="submit" onclick="alert('문의가 완료되었습니다.');">등록</button>
+        <button class="reset_btn" type="button" onclick="history.go(-1);">취소</button>
+    </div>
+</form>
+</body>
+</html>

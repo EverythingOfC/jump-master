@@ -1,0 +1,81 @@
+*{
+    margin: 0 auto;
+}
+
+img{
+    padding:0;
+}
+.page{
+    margin-top:1vw;
+    text-align:center;
+}
+.page .page_info{
+    display: inline-block;
+    margin-top:1.5vw;
+}
+.page p{
+    text-align: left;
+    margin-top:0.2vw;
+}
+.active{
+    font-weight:bold;
+    font-size:20px;
+}
+
+li{
+    list-style-type: none;
+    display: inline-block;
+    padding:4px;
+}
+a{
+    color:black;
+    text-decoration: none;
+}
+a:hover{
+    font-weight: bold;
+}
+.nav{
+    float:right;
+    margin-right:5vw;
+}
+.head{
+    margin-top:0.8vw;
+    width:40%;
+    border:3px solid black;
+    border-radius: 30px;
+    text-align: center;
+    font-size:1.2vw;
+    padding:12px 0px;
+    background-color: aquamarine;
+}
+.meta{
+    width:90%;
+    margin-top:2vw;
+    text-align: center;
+}
+.meta a:hover{
+    color:red;
+}
+.meta input{
+    padding:5px 10px;
+    cursor:pointer;
+}
+.meta input[type="checkbox"]{
+    width:18px;
+    height:18px;
+}
+table, th, td{
+    border:1px solid black;
+    border-collapse: separate;
+}
+
+.meta th{
+    background-color:orange;
+    padding:6px 0px;
+    font-size:1vw;
+}
+.meta td{
+    background-color:skyblue;
+    padding:3px;
+    font-size:12px;
+}

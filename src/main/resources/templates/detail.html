@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- 타임리프 태그->  th:    !-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/detail.css}" type="text/css" rel="stylesheet">
+</head>
+<body>
+
+<div class="head">
+    <h2>상세보기</h2>
+</div>
+
+<table class="detail">
+    <tr>
+        <th>분야</th>
+        <td th:text="${metaView.metaClassifications}"></td>
+    </tr>
+    <tr>
+        <th>유형</th>
+        <td th:text="${metaView.metaType}"></td>
+    </tr>
+    <tr>
+        <th>제목</th>
+        <td th:text="${metaView.metaTitle}"></td>
+    </tr>
+    <tr>
+        <th>주제어</th>
+        <td th:text="${metaView.metaSubjects}"></td>
+    </tr>
+    <tr>
+        <th>설명</th>
+        <td th:text="${metaView.metaDescription}"></td>
+    </tr>
+    <tr>
+        <th>발행기관</th>
+        <td th:text="${metaView.metaPublisher}"></td>
+    </tr>
+    <tr>
+        <th>원작자</th>
+        <td th:text="${metaView.metaContributor}"></td>
+    </tr>
+    <tr>
+        <th>날짜</th>
+        <td th:text="${metaView.metaDate}"></td>
+    </tr>
+    <tr>
+        <th>언어</th>
+        <td th:text="${metaView.metaLanguage}"></td>
+    </tr>
+    <tr>
+        <th>식별자</th>
+        <td th:text="${metaView.metaIdentifier}"></td>
+    </tr>
+    <tr>
+        <th>형식</th>
+        <td th:text="${metaView.metaFormat}"></td>
+    </tr>
+    <tr>
+        <th>관련자원</th>
+        <td th:text="${metaView.metaRelation}"></td>
+    </tr>
+    <tr>
+        <th>내용범위</th>
+        <td th:text="${metaView.metaCoverage}"></td>
+    </tr>
+    <tr>
+        <th>이용조건</th>
+        <td th:text="${metaView.metaRight}"></td>
+    </tr>
+</table>
+
+<div class="button">
+    <button type="button"><a th:href="@{  /jump/list(listPage=${listPage},type=${type}) }" th:text="목록"></a></button>
+</div>
+</body>
+</html>

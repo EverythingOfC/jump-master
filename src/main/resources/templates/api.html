@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/style.css}">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <title>문화체육관광부 정책브리핑 보도자료</title>
+    <script>
+        //버튼 이름 바뀜
+        $(function () {
+            $('.toggleDiv').click(function () {
+                if ($(this).html() == "▶ 메타 정보 열기") {
+                    $(this).html("▼ 메타 정보 닫기");
+                } else {
+                    $(this).html("▶ 메타 정보 열기");
+                }
+            });
+        });
+        // 메타 정보 토글
+        $(document).ready(function () {
+            $(".meta-dataset-info").click(function () {
+                $(this).next(".meta-dataset-table").toggle();
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="header">
+    <nav class="navbar">
+        <div class="navbar_logo">
+            <img class="logo" th:src="@{/logo.png}" alt="LOGO">
+            <span class="nav_title"><a href="">1석5조</a></span>
+            <span style="margin-left:1vw;" class="nav_title"><a href="/">API 검색</a></span>
+        </div>
+    </nav>
+</div>
+
+<div id="body_content">
+    <div class="dataset-title">
+        <div class="title-api">
+            <h2>오픈 API 상세</h2>
+        </div>
+
+        <div class="title-area" th:each="sear,loop:${search}"
+             th:if="${#strings.equals(sear.title, '문화체육관광부_정책브리핑_보도자료_API')}">
+            <p>문화체육관광부_정책브리핑_보도자료_API</p>
+            <div class="api-down">
+                <button type="button" onclick="location.href='/jump/api?type=보도자료'">API 조회</button>
+                <button type="button" onclick="location.href='/jump/save?type=보도자료'">CSV 저장</button>
+            </div>
+            <a href="https://www.data.go.kr/data/15095295/openapi.do" target="_blank"><span
+                    class="original_site">원본 사이트</span></a>
+
+            <div class="meta-dataset-info"><span>▶ 메타 정보 열기</span></div>
+            <div class="meta-dataset-table">
+                <table class="api-dataset-table">
+                    <caption></caption>
+                    <tr>
+                        <th class="th">분류체계</th>
+                        <td class="td">문화체육관광 - 문화체육관광일반</td>
+                        <th class="th">제공기관</th>
+                        <td class="td">문화체육관광부</td>
+                    </tr>
+                    <tr>
+                        <th class="th">관리부서명</th>
+                        <td class="td">디지털소통관 정책포털과</td>
+                        <th class="th">관리부서 전화번호</th>
+                        <td class="td">
+                            <strong>
+                                <span>044-203-3046</span>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="th">API 유형</th>
+                        <td class="td">REST</td>
+                        <th class="th">데이터포맷</th>
+                        <td class="td">XML</td>
+                    </tr>
+                    <tr>
+                        <th class="th">활용신청</th>
+                        <td class="td">41</td>
+                        <th class="th">키워드</th>
+                        <td class="td">행정기관,보도,언론</td>
+                    </tr>
+                    <tr>
+                        <th class="th">등록</th>
+                        <td class="td">2021-11-30</td>
+                        <th class="th">수정</th>
+                        <td class="td">2022-09-22</td>
+                    </tr>
+                    <tr>
+                        <th class="th">비용부과유무</th>
+                        <td class="td">무료</td>
+                        <th class="th">신청가능 트래픽</th>
+                        <td class="td">개발계정 : 1,000 /운영계정 : 활용사례 등록시 신청하면 트래픽 증가 가능</td>
+                    </tr>
+                    <tr>
+                        <th class="th">심의유형</th>
+                        <td class="td" colspan="3">개발단계 : 자동승인 / 운영단계 : 자동승인</td>
+                    </tr>
+                    <tr>
+                        <th class="th">이용허락범위</th>
+                        <td class="td" colspan="3">
+                            <div class="img-copyright">
+                                <div class="img-copyright">
+                                    <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
+                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                    </a>
+                                </div>
+                                <span>출처표시</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="title-area" th:each="sear,loop:${search}"
+             th:if="${#strings.equals(sear.title, '문화체육관광부_정책브리핑_정책뉴스_API')}">
+            <p>문화체육관광부_정책브리핑_정책뉴스_API</p>
+            <div class="api-down">
+                <button type="button" onclick="location.href='/jump/api?type=정책뉴스'">API 조회</button>
+                <button type="button" onclick="location.href='/jump/save?type=정책뉴스'">CSV 저장</button>
+            </div>
+            <a href="https://www.data.go.kr/data/15095335/openapi.do" target="_blank"><span
+                    class="original_site">원본 사이트</span></a>
+
+            <div class="meta-dataset-info"><span>▶ 메타 정보 열기</span></div>
+            <div class="meta-dataset-table">
+                <table class="api-dataset-table">
+                    <caption></caption>
+                    <tr>
+                        <th class="th">분류체계</th>
+                        <td class="td">문화체육관광 - 문화체육관광일반</td>
+                        <th class="th">제공기관</th>
+                        <td class="td">문화체육관광부</td>
+                    </tr>
+                    <tr>
+                        <th class="th">관리부서명</th>
+                        <td class="td">디지털소통관 정책포털과</td>
+                        <th class="th">관리부서 전화번호</th>
+                        <td class="td">
+                            <strong>
+                                <span>044-203-3046</span>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="th">API 유형</th>
+                        <td class="td">REST</td>
+                        <th class="th">데이터포맷</th>
+                        <td class="td">XML</td>
+                    </tr>
+                    <tr>
+                        <th class="th">활용신청</th>
+                        <td class="td">54</td>
+                        <th class="th">키워드</th>
+                        <td class="td">정부,정책,뉴스</td>
+                    </tr>
+                    <tr>
+                        <th class="th">등록</th>
+                        <td class="td">2021-12-01</td>
+                        <th class="th">수정</th>
+                        <td class="td">2022-09-22</td>
+                    </tr>
+                    <tr>
+                        <th class="th">비용부과유무</th>
+                        <td class="td">무료</td>
+                        <th class="th">신청가능 트래픽</th>
+                        <td class="td">개발계정 : 1,000 /운영계정 : 활용사례 등록시 신청하면 트래픽 증가 가능</td>
+                    </tr>
+                    <tr>
+                        <th class="th">심의유형</th>
+                        <td class="td" colspan="3">개발단계 : 자동승인 / 운영단계 : 자동승인</td>
+                    </tr>
+                    <tr>
+                        <th class="th">이용허락범위</th>
+                        <td class="td" colspan="3">
+                            <div class="img-copyright">
+                                <div class="img-copyright">
+                                    <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
+                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                    </a>
+                                </div>
+                                <span>공공저작물_출처표시</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="title-area" th:each="sear,loop:${search}"
+             th:if="${#strings.equals(sear.title, '문화체육관광부_정책브리핑_포토_API')}">
+            <p>문화체육관광부_정책브리핑_포토_API</p>
+            <div class="api-down">
+                <button type="button" onclick="location.href='/jump/api?type=포토'">API 조회</button>
+                <button type="button" onclick="location.href='/jump/save?type=포토'">CSV 저장</button>
+            </div>
+            <a href="https://www.data.go.kr/data/15095300/openapi.do" target="_blank"><span
+                    class="original_site">원본 사이트</span></a>
+
+            <div class="meta-dataset-info"><span>▶ 메타 정보 열기</span></div>
+            <div class="meta-dataset-table">
+                <table class="api-dataset-table">
+                    <caption></caption>
+                    <tr>
+                        <th class="th">분류체계</th>
+                        <td class="td">문화체육관광 - 문화체육관광일반</td>
+                        <th class="th">제공기관</th>
+                        <td class="td">문화체육관광부</td>
+                    </tr>
+                    <tr>
+                        <th class="th">관리부서명</th>
+                        <td class="td">디지털소통관 정책포털과</td>
+                        <th class="th">관리부서 전화번호</th>
+                        <td class="td">
+                            <strong>
+                                <span>044-203-3046</span>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="th">API 유형</th>
+                        <td class="td">REST</td>
+                        <th class="th">데이터포맷</th>
+                        <td class="td">XML</td>
+                    </tr>
+                    <tr>
+                        <th class="th">활용신청</th>
+                        <td class="td">11</td>
+                        <th class="th">키워드</th>
+                        <td class="td">행정기관,문화체육관광부,국민소통실</td>
+                    </tr>
+                    <tr>
+                        <th class="th">등록</th>
+                        <td class="td">2021-11-30</td>
+                        <th class="th">수정</th>
+                        <td class="td">2022-09-22</td>
+                    </tr>
+                    <tr>
+                        <th class="th">비용부과유무</th>
+                        <td class="td">무료</td>
+                        <th class="th">신청가능 트래픽</th>
+                        <td class="td">개발계정 : 1,000 /운영계정 : 활용사례 등록시 신청하면 트래픽 증가 가능</td>
+                    </tr>
+                    <tr>
+                        <th class="th">심의유형</th>
+                        <td class="td" colspan="3">개발단계 : 자동승인 / 운영단계 : 자동승인</td>
+                    </tr>
+                    <tr>
+                        <th class="th">이용허락범위</th>
+                        <td class="td" colspan="3">
+                            <div class="img-copyright">
+                                <div class="img-copyright">
+                                    <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
+                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                    </a>
+                                </div>
+                                <span>공공저작물_출처표시 + 상업적 이용금지 + 변경금지</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="title-area" th:each="sear,loop:${search}" th:if="${#strings.equals(sear.title, '법제처_현행법령_API')}">
+            <p>법제처_현행법령_API</p>
+            <div class="api-down">
+                <button type="button" onclick="location.href='/jump/api?type=현행법령'">API 조회</button>
+                <button type="button" onclick="location.href='/jump/save?type=현행법령'">CSV 저장</button>
+            </div>
+            <a href="https://open.assembly.go.kr/portal/data/service/selectServicePage.do" target="_blank"><span
+                    class="original_site">원본 사이트</span></a>
+
+            <div class="meta-dataset-info"><span class="toggleDiv">▶ 메타 정보 열기</span></div>
+            <div class="meta-dataset-table">
+                <table class="api-dataset-table">
+                    <caption></caption>
+                    <tr>
+                        <th class="th">분류체계</th>
+                        <td class="td">국회의원>국회의원 현황 정보</td>
+                        <th class="th">제공기관</th>
+                        <td class="td">국회사무처</td>
+                    </tr>
+                    <tr>
+                        <th class="th">API 유형</th>
+                        <td class="td">REST</td>
+                        <th class="th">데이터포맷</th>
+                        <td class="td">XML</td>
+                    </tr>
+                    <tr>
+                        <th class="th">원본시스템</th>
+                        <td class="td">의안정보시스템</td>
+                        <th class="th">검색태그</th>
+                        <td class="td">의원,발의,법률</td>
+                    </tr>
+                    <tr>
+                        <th class="th">공개일자</th>
+                        <td class="td">2019-11-04</td>
+                        <th class="th">최종 수정일자</th>
+                        <td class="td">2023-01-29</td>
+                    </tr>
+                    <tr>
+                        <th class="th">공개주기</th>
+                        <td class="td">수시</td>
+                        <th class="th">공개시기</th>
+                        <td class="td">상시</td>
+                    </tr>
+                    <tr>
+                        <th class="th">관리부서 전화번호</th>
+                        <td class="td" colspan="3"><strong>
+                            <span>02-6788-3853 </span>
+                        </strong></td>
+                    </tr>
+                    <tr>
+                        <th class="th">이용허락범위</th>
+                        <td class="td" colspan="3">
+                            <div class="img-copyright">
+                                <div class="img-copyright">
+                                    <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
+                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                    </a>
+                                </div>
+                                <span>출처표시</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="title-area" th:each="sear,loop:${search}" th:if="${#strings.equals(sear.title, '국회의원 발의법률안')}">
+            <p>국회의원 발의법률안</p>
+            <div class="api-down">
+                <button type="button" onclick="location.href='/jump/list?type=법률'">API 조회</button>
+                <button type="button" onclick="location.href='/jump/save?type=법률'">CSV 저장</button>
+            </div>
+            <a href="https://open.assembly.go.kr/portal/data/service/selectServicePage.do" target="_blank"><span
+                    class="original_site">원본 사이트</span></a>
+
+            <div class="meta-dataset-info"><span class="toggleDiv">▶ 메타 정보 열기</span></div>
+            <div class="meta-dataset-table">
+                <table class="api-dataset-table">
+                    <caption></caption>
+                    <tr>
+                        <th class="th">분류체계</th>
+                        <td class="td">국회의원>국회의원 현황 정보</td>
+                        <th class="th">제공기관</th>
+                        <td class="td">국회사무처</td>
+                    </tr>
+                    <tr>
+                        <th class="th">API 유형</th>
+                        <td class="td">REST</td>
+                        <th class="th">데이터포맷</th>
+                        <td class="td">XML</td>
+                    </tr>
+                    <tr>
+                        <th class="th">원본시스템</th>
+                        <td class="td">의안정보시스템</td>
+                        <th class="th">검색태그</th>
+                        <td class="td">의원,발의,법률</td>
+                    </tr>
+                    <tr>
+                        <th class="th">공개일자</th>
+                        <td class="td">2019-11-04</td>
+                        <th class="th">최종 수정일자</th>
+                        <td class="td">2023-01-29</td>
+                    </tr>
+                    <tr>
+                        <th class="th">공개주기</th>
+                        <td class="td">수시</td>
+                        <th class="th">공개시기</th>
+                        <td class="td">상시</td>
+                    </tr>
+                    <tr>
+                        <th class="th">관리부서 전화번호</th>
+                        <td class="td" colspan="3"><strong>
+                            <span>02-6788-3853 </span>
+                        </strong></td>
+                    </tr>
+                    <tr>
+                        <th class="th">이용허락범위</th>
+                        <td class="td" colspan="3">
+                            <div class="img-copyright">
+                                <div class="img-copyright">
+                                    <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
+                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                    </a>
+                                </div>
+                                <span>출처표시</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+
+        <div class="title-area" th:each="sear,loop:${search}"
+             th:if="${#strings.equals(sear.title, '국립중앙도서관_OAK_Kotra_API')}">
+            <p>국립중앙도서관_OAK_KOTRA</p>
+            <div class="api-down">
+                <button type="button" onclick="location.href='/jump/api?type=코트라'">API 조회</button>
+                <button type="button" onclick="location.href='/jump/save?type=코트라'">CSV 저장</button>
+            </div>
+            <a href="http://openknowledge.kotra.or.kr/" target="_blank"><span class="original_site">원본 사이트</span></a>
+
+            <div class="meta-dataset-info"><span>▶ 메타 정보 열기</span></div>
+            <div class="meta-dataset-table">
+                <table class="api-dataset-table">
+                    <caption></caption>
+                    <tr>
+                        <th class="th">분류체계</th>
+                        <td class="td">문화체육관광 - 문화체육관광일반</td>
+                        <th class="th">제공기관</th>
+                        <td class="td">문화체육관광부</td>
+                    </tr>
+                    <tr>
+                        <th class="th">관리부서명</th>
+                        <td class="td">디지털소통관 정책포털과</td>
+                        <th class="th">관리부서 전화번호</th>
+                        <td class="td">
+                            <strong>
+                                <span>044-203-3046</span>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="th">API 유형</th>
+                        <td class="td">REST</td>
+                        <th class="th">데이터포맷</th>
+                        <td class="td">XML</td>
+                    </tr>
+                    <tr>
+                        <th class="th">활용신청</th>
+                        <td class="td">41</td>
+                        <th class="th">키워드</th>
+                        <td class="td">행정기관,보도,언론</td>
+                    </tr>
+                    <tr>
+                        <th class="th">등록</th>
+                        <td class="td">2021-11-30</td>
+                        <th class="th">수정</th>
+                        <td class="td">2022-09-22</td>
+                    </tr>
+                    <tr>
+                        <th class="th">비용부과유무</th>
+                        <td class="td">무료</td>
+                        <th class="th">신청가능 트래픽</th>
+                        <td class="td">개발계정 : 1,000 /운영계정 : 활용사례 등록시 신청하면 트래픽 증가 가능</td>
+                    </tr>
+                    <tr>
+                        <th class="th">심의유형</th>
+                        <td class="td" colspan="3">개발단계 : 자동승인 / 운영단계 : 자동승인</td>
+                    </tr>
+                    <tr>
+                        <th class="th">이용허락범위</th>
+                        <td class="td" colspan="3">
+                            <div class="img-copyright">
+                                <div class="img-copyright">
+                                    <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
+                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                    </a>
+                                </div>
+                                <span>출처표시</span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+</body>
+</html>
