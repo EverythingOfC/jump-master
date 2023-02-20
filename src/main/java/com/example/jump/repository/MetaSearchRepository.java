@@ -8,6 +8,4 @@ import java.util.List;
 public interface MetaSearchRepository extends JpaRepository<SearchApi,Long> {     // 엔티티 클래스명과 엔티티의 pk를 적어줌.
 
     List<SearchApi> findByTitleContaining(String title);   // 제목으로 api 검색
-
-
 }

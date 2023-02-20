@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<div class ="footer" th:fragment="footerFragment">
+  <div class="foot">
+    <ul>
+      <li>이용약관</li>
+      <li>개인정보처리방침</li>
+      <li sec:authorize="hasRole('USER')" class="log_list">
+        <a href="/jump/support">문의하기</a>
+      </li>
+      <br>
+      <li>Copyright © oneStoneTwoBird. All Rights Reserved. | 주소 : 서울시 서초구 동작대로 132</li>
+    </ul>
+  </div>
+</div>
+
+</html>

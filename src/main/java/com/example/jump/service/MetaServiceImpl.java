@@ -2,7 +2,6 @@ package com.example.jump.service;
 
 import com.example.jump.domain.ClientSupportApi;
 import com.example.jump.domain.MetaApi;
-import com.example.jump.domain.RegisterDTO;
 import com.example.jump.domain.SearchApi;
 import com.example.jump.entity.ClubMember;
 import com.example.jump.repository.ClientSupportApiRepository;
@@ -48,7 +47,7 @@ public class MetaServiceImpl implements MetaService {
 
     private final ClubMemberRepository clubMemberRepository; // 회원정보를 가져오기 위한 객체
 
-    public Page<MetaApi> getList(int page, String type) {   // 전체 조회
+    public Page<MetaApi> getList(int page, String type) {   // 페이지로 분할해서 전체 조회
 
         Pageable pageable = null;    //  조회할 페이지 번호와 한 페이지에 보여줄 데이터의 개수를 객체로 저장
         try {
@@ -57,6 +56,12 @@ public class MetaServiceImpl implements MetaService {
             this.metaRepository.findAll();
         }
         return this.metaRepository.findAllByMetaType(pageable, type);
+    }
+
+    @Override
+    public List<MetaApi> findAll(String type) { // 전체 조회
+
+        return this.metaRepository.findAllByMetaType(type);
     }
 
     public MetaApi getView(String id) {    // 상세
@@ -81,7 +86,6 @@ public class MetaServiceImpl implements MetaService {
 
     public void getApi(String type) {   // 해당 API를 저장 및 출력
 
-        // api유형과 url주소의 쌍
         Map<String, String> map = new HashMap<>();
         map.put("보도자료", "http://apis.data.go.kr/1371000/pressReleaseService/pressReleaseList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D&startDate=20211201&endDate=20211203");
         map.put("정책뉴스", "http://apis.data.go.kr/1371000/policyNewsService/policyNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D&startDate=20211201&endDate=20211203");
@@ -430,7 +434,7 @@ public class MetaServiceImpl implements MetaService {
         }
 
         return null;    // 없으면 null
-    }          // CSV로 저장
+    }
 
     @Override
     public List<SearchApi> searchApi(String title) {

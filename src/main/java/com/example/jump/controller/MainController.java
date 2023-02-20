@@ -1,6 +1,7 @@
 package com.example.jump.controller;
 
 import com.example.jump.domain.ClientSupportApi;
+import com.example.jump.domain.MetaApi;
 import com.example.jump.domain.RegisterDTO;
 import com.example.jump.domain.SearchApi;
 import com.example.jump.entity.ClubMember;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -50,6 +52,14 @@ public class MainController {   // api출력 및 저장하는 핵심 로직
 
     }
 
+    @GetMapping("/jump/json")   // 해당 API를 Json으로 출력
+    public @ResponseBody List<MetaApi> json(@RequestParam(value="type") String type){   // 키와 값 구조의 데이터를 JSON형태로 리턴
+
+        List<MetaApi> metaApi = this.metaService.findAll(type); // 해당 형식의 데이터 저장
+
+        return metaApi; // json형식으로 저장된 데이터 리턴
+    }
+
     @GetMapping("/jump/save")   // csv파일로 저장
     public ResponseEntity<byte[]> saveCsv(@RequestParam(value = "type") String type) {
 
@@ -62,6 +72,7 @@ public class MainController {   // api출력 및 저장하는 핵심 로직
         List<SearchApi> searchApis = this.metaSearch.searchApi(search);
 
         model.addAttribute("search", searchApis);    // 검색 결과를 모델의 속성으로 저장
+        model.addAttribute("kw",search);
 
         return "api";   // 자동으로 resources/templates/api;
     }

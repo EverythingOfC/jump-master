@@ -1,8 +1,14 @@
+html, body {
+    height: auto;
+    margin: 0;
+    padding: 0;
+    font-family: 'Pretendard','Noto Sans KR',sans-serif;
+}
+
 .logo {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 120px;
     float: left;
-    margin: 10px;
 }
 .title-api{
     margin-bottom: 20px;
@@ -11,40 +17,29 @@
 nav{
     width: 100%;
     height: 120px;
+    background-color: #000080;
 }
 #body_content{
     width: 100%;
-    height: auto;
+    height:auto;
     padding-top: 60px;
 }
 .navbar_logo {
     border-bottom: 2px solid #c2c2c2;
-    background-color: #2ab4ff;
-    width: 100%;
+    width: 30%;
     height: 100%;
+    display: inline-block;
 }
-
 .nav_title > a {
     color: white;
-    font-size: 30px;
+    font-size: 25px;
     position: relative;
     font-weight: bold;
     /*margin: 40px 0 0 40px;*/
     line-height:120px;
     text-decoration: none;
 }
-.nav_list > a{
-    color: white;
-    font-size: 25px;
-    margin-top: 30px;
-    margin-right: 10px;
-    float: right;
-    line-height: 100px;
-}
-html, body {
-    margin: 0;
-    padding: 0;
-}
+
 table {
     border-spacing: 0px;
     padding: 0px;
@@ -64,10 +59,7 @@ tr> .dataset-table, td{
 .input_data{
     margin-left: 10px;
 }
-a {
-    color: black;
-    text-decoration: none;
-}
+
 .body_content{
     width: 100%;
     height: 100%;
@@ -112,13 +104,14 @@ a> .original_site:hover{
     width: 100%;
     height: 500px;
 }
-.dataset-title{
-    position: relative;
+.dataset-title,.dataset-content{
     /*background-color: chartreuse;*/
-    margin: auto;
+    position:relative;
+    margin:auto;
     width: 80%;
     height: 100px;
 }
+
 .title-area{
     border-top: 3px solid #5b5b85;
     border-bottom: 1px solid #c2c2c2;
@@ -126,9 +119,12 @@ a> .original_site:hover{
     border-right: 1px solid #c2c2c2;
     display: inline-block;
     margin: auto;
-    width: 100%;
-    min-height: 120px;
+    width: 80%;
+    min-height: 110px;
     height: auto;
+}
+.title-area>img{
+    margin:5px;
 }
 .title-area>p{
     display: inline-block;
@@ -169,16 +165,16 @@ button {
     color: #fff;
     font-family: 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif;
     letter-spacing: -0.05em;
-    border: 1px solid #3671c8;
+    border: 1px solid darkgray;
     border-radius: 0;
     text-align: center;
     vertical-align: middle;
-    background-color: #2ab4ff;
+    background-color: skyblue;
 }
 .api-down>button:hover {
     font-weight: bold;
     cursor: pointer;
-    background-color: rgb(42, 141, 255);
+    background-color: black;
 }
 .error-ms{
     margin-top: 40px;
@@ -203,12 +199,12 @@ button {
     font-family: 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif;
     font-weight: 700;
     letter-spacing: -0.05em;
-    border: 1px solid #3671c8;
+    border: 1px solid darkgray;
     border-radius: 0;
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
-    background-color: #2ab4ff;
+    background-color: darkgray;
 }
 
 
@@ -227,8 +223,8 @@ button {
 
 .btn1 {
     color: #fff;
-    background-color: #337ab7;
-    border-color: #2e6da4;
+    background-color: darkgray;
+    border-color: darkgray;
 }
 
 
@@ -251,25 +247,6 @@ button {
 .blank {
     height: 50px;
 }
-.mapping_data_content{
-    margin: auto;
-    width: 80%;
-}
-.nowdata {
-    padding: 8px;
-    background-color: #f7f7f9;
-    border: 1px solid #e1e1e8;
-    width: 99%;
-    display: flex;
-    border-radius: 4px;
-}
-
-.table_div1 {
-    width: 100%;
-    border: 1px solid #e1e1e8;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-}
 
 .table_container {
     display: flex;
@@ -282,30 +259,6 @@ button {
 }
 
 
-
-.raw_data {
-    float: left;
-    width: 48%;
-    word-break: break-all;
-}
-
-.mapping_data {
-    float: right;
-    width: 48%;
-    word-break: break-all;
-}
-.row1 {
-    padding-left: 5px;
-    width: 100px;
-    height: auto;
-    text-align: left;
-    color: #2ab4ff;
-    background-color: rgba(255, 235, 205, 0.38);
-}
-.row2{
-    padding: 5px;
-}
-
 caption{
     font-family: 'Malgun Gothic', '맑은 고딕', Dotum, '돋움', sans-serif;
     margin: 10px;
@@ -314,4 +267,113 @@ caption{
 .api-down p{
     margin-right: 0.25vw;
     float:right;
+}
+
+.search {
+    width: 90%;
+    max-width: 40rem;
+    text-align: center;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.input-bar{
+    align-items: center;
+    background: #fff;
+    border: 2px solid #0000;
+    border-radius: 4rem;
+    box-sizing: border-box;
+    box-shadow: 0 1rem 2rem -1.5rem #0005;
+    display: inline-flex;
+    height: 5rem;
+    overflow: hidden;
+    transition: box-shadow .5s;
+    width: 100%;
+}
+
+.input-bar>input {
+    background: transparent;
+    border: 0;
+    box-sizing: border-box;
+    flex: 1;
+    font-size: 1.25rem;
+    margin-left: .5rem;
+    min-width: 8rem;
+    outline: none;
+    padding-left: 1rem;
+    /*position: relative;*/
+    /*z-index: 1;*/
+}
+
+.dictate.on {
+    background: #000;
+}
+
+.dictate.on svg {
+    display: block;
+    margin: auto;
+}
+
+.dictate.on .ic-mike {
+    display: none;
+}
+
+.dictate svg {
+    display: none;
+}
+
+.btn_img{
+    width: 60px;
+    height: 4rem;
+    margin-left: -3.5px;
+}
+.dictate {
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: 50%;
+    color: #444;
+    font-size: 1.25rem;
+    margin-right: 5px;
+    outline: none;
+    width: 4rem;
+    min-width: 3rem;
+    height: 4rem;
+    transition: background-color, color;
+    transition-duration: .25s;
+    box-shadow: 0 0 2rem #0000;
+}
+
+button:hover {
+    background: #eee;
+}
+
+i {
+    font-family: 'ic-font' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ic-mike:before {
+    content: "\e900";
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 20px rgba(255, 82, 82, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+    }
 }

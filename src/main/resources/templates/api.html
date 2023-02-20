@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" th:href="@{/style.css}">
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" th:href="@{/css/footer.css}">
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -25,26 +26,63 @@
     </script>
 </head>
 <body>
+
 <div class="header">
     <nav class="navbar">
         <div class="navbar_logo">
-            <img class="logo" th:src="@{/logo.png}" alt="LOGO">
-            <span class="nav_title"><a href="">1석5조</a></span>
-            <span style="margin-left:1vw;" class="nav_title"><a href="/">API 검색</a></span>
+            <img class="logo" th:src="@{/images/logo.png}" alt="LOGO">
+            <span style="margin:0 2vw;" class="nav_title"><a href="/">메인으로</a></span>
         </div>
+        <div class="search">
+            <div class="input-bar">
+                <input type="text" placeholder="검색어를 입력해주세요" autocomplete="off" name="search" id="keyword"
+                       th:value="${kw}" style="z-index: 10;">
+                <button class="dictate">
+                    <img class="btn_img" th:src="@{/images/mic.png}">
+                    <i class="ic-mike"></i>
+                    <svg width="1.25rem" height="1.25rem" viewBox="0 0 100 100">
+                        <g stroke="#fff" stroke-width="15">
+                            <path d="M20,20 20,80">
+                                <animate attributeName="d" values="M20,40 20,60;M20,20 20,80;M20,40 20,60" dur="1s"
+                                         repeatCount="indefinite"/>
+                            </path>
+                            <path d="M50,10 50,90">
+                                <animate attributeName="d" values="M50,10 50,90;M50,40 50,60;M50,10 50,90" dur="1s"
+                                         repeatCount="indefinite"/>
+                            </path>
+                            <path d="M80,20 80,80">
+                                <animate attributeName="d" values="M80,40 80,60;M80,20 80,80;M80,40 80,60" dur="1s"
+                                         repeatCount="indefinite"/>
+                            </path>
+                        </g>
+                    </svg>
+                </button>
+                <form th:action="@{/jump/search}" method="get" id="searchForm">
+
+                    <input type="hidden" id="search_kw" name="search_kw">
+                    <button class="dictate" id="search_btn" type="submit"><img class="btn_img"
+                                                                               th:src="@{/images/search3.png}"></button>
+                </form>
+            </div>
+        </div>
+        <script th:src="@{speech.js}"></script>
     </nav>
 </div>
 
 <div id="body_content">
-    <div class="dataset-title">
+    <div class="dataset-title">    <!-- API 목록 제목 -->
         <div class="title-api">
-            <h2>오픈 API 상세</h2>
+            <h2>Open API 목록</h2>
         </div>
+    </div>
 
+    <div class="dataset-content">   <!-- API 목록 내용 -->
         <div class="title-area" th:each="sear,loop:${search}"
              th:if="${#strings.equals(sear.title, '문화체육관광부_정책브리핑_보도자료_API')}">
+            <img th:src="@{/images/문화체육관광부.png}" width="200px" height="120px" style="float:left;">
             <p>문화체육관광부_정책브리핑_보도자료_API</p>
             <div class="api-down">
+                <button type="button" onclick="location.href='/jump/json?type=보도자료'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/api?type=보도자료'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=보도자료'">CSV 저장</button>
             </div>
@@ -118,8 +156,10 @@
 
         <div class="title-area" th:each="sear,loop:${search}"
              th:if="${#strings.equals(sear.title, '문화체육관광부_정책브리핑_정책뉴스_API')}">
+            <img th:src="@{/images/문화체육관광부.png}" width="200px" height="120px" style="float:left;">
             <p>문화체육관광부_정책브리핑_정책뉴스_API</p>
             <div class="api-down">
+                <button type="button" onclick="location.href='/jump/json?type=정책뉴스'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/api?type=정책뉴스'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=정책뉴스'">CSV 저장</button>
             </div>
@@ -194,8 +234,10 @@
 
         <div class="title-area" th:each="sear,loop:${search}"
              th:if="${#strings.equals(sear.title, '문화체육관광부_정책브리핑_포토_API')}">
+            <img th:src="@{/images/문화체육관광부.png}" width="200px" height="120px" style="float:left;">
             <p>문화체육관광부_정책브리핑_포토_API</p>
             <div class="api-down">
+                <button type="button" onclick="location.href='/jump/json?type=포토'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/api?type=포토'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=포토'">CSV 저장</button>
             </div>
@@ -268,8 +310,10 @@
         </div>
 
         <div class="title-area" th:each="sear,loop:${search}" th:if="${#strings.equals(sear.title, '법제처_현행법령_API')}">
+            <img th:src="@{/images/법제처.png}" width="200px" height="120px" style="float:left;">
             <p>법제처_현행법령_API</p>
             <div class="api-down">
+                <button type="button" onclick="location.href='/jump/json?type=현행법령'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/api?type=현행법령'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=현행법령'">CSV 저장</button>
             </div>
@@ -334,8 +378,10 @@
         </div>
 
         <div class="title-area" th:each="sear,loop:${search}" th:if="${#strings.equals(sear.title, '국회의원 발의법률안')}">
+            <img th:src="@{/images/열린국회정보.png}" width="200px" height="120px" style="float:left;">
             <p>국회의원 발의법률안</p>
             <div class="api-down">
+                <button type="button" onclick="location.href='/jump/json?type=법률'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/list?type=법률'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=법률'">CSV 저장</button>
             </div>
@@ -399,11 +445,12 @@
             </div>
         </div>
 
-
-        <div class="title-area" th:each="sear,loop:${search}"
-             th:if="${#strings.equals(sear.title, '국립중앙도서관_OAK_Kotra_API')}">
+        <div class="title-area" th:each="sear,loop:${search}" style="margin-bottom:20px;"
+             th:if="${#strings.equals(sear.title, '국립중앙도서관_OAK_Kotra')}">
+            <img th:src="@{/images/OAK.png}" width="200px" height="120px" style="float:left;">
             <p>국립중앙도서관_OAK_KOTRA</p>
             <div class="api-down">
+                <button type="button" onclick="location.href='/jump/json?type=코트라'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/api?type=코트라'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=코트라'">CSV 저장</button>
             </div>
@@ -476,7 +523,8 @@
 
     </div>
 
-
 </div>
+
 </body>
+
 </html>

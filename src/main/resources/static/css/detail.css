@@ -1,5 +1,6 @@
 *{
     margin: 0 auto;
+    text-align: center;
 }
 
 img{
@@ -21,10 +22,9 @@ a:hover{
     width:40%;
     border:3px solid black;
     border-radius: 30px;
-    text-align: center;
     font-size:1.2vw;
     padding:12px 0px;
-    background-color: aquamarine;
+    background-color: lightgray;
 }
 th, td{
     border:1px solid black;
@@ -33,26 +33,24 @@ th, td{
 .detail{
     width:70%;
     margin-top:2.5vw;
-    text-align: center;
 }
 th{
     width:20%;
-    background-color:orange;
+    background-color:lightgray;
     font-size:14px;
 }
 td{
     width:80%;
     font-size:12px;
-    background-color:skyblue;
+    background-color:white;
 }
-.button{
-    text-align:center;
+.list{
     margin-top:0.5vw;
 }
-.button a{
+.list a{
     padding: 5px 20px;
     font-size:20px;
 }
-.button button{
+.list button{
     padding:5px 0px;
 }

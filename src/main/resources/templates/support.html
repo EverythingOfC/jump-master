@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link th:href="@{/support.css}" type="text/css" rel="stylesheet">
+    <link th:href="@{/css/support.css}" type="text/css" rel="stylesheet">
+    <link th:href="@{/css/footer.css}" rel="stylesheet" >
 </head>
 <body>
 <header class="header">
     <nav class="navbar">
         <div class="navbar_logo">
-            <img class="logo" th:src="@{/logo.png}" alt="LOGO">
-            <span class="nav_title"><a href="">1석5조</a></span>
+            <img class="logo" th:src="@{/images/logo.png}" alt="LOGO">
         </div>
     </nav>
 </header>
@@ -24,7 +24,7 @@
         <tbody>
         <tr>
             <th>
-                <p>api 제목</p>
+                <p>API 제목</p>
             </th>
             <td>
                 <select name="sup_category" class="select">
@@ -58,7 +58,7 @@
             </th>
             <td>
                 <textarea id="sup_content" name="sup_content" maxlength="4000" class="input-textarea h160px" rows="5"
-                          cols="10"></textarea>
+                          cols="10" placeholder="500자 이내 입력 가능"></textarea>
             </td>
         </tr>
         <tr>
@@ -77,5 +77,7 @@
         <button class="reset_btn" type="button" onclick="history.go(-1);">취소</button>
     </div>
 </form>
+
+<div th:replace="~{footer :: footerFragment}" class="footer"></div> <!-- footer 표시 -->
 </body>
 </html>
