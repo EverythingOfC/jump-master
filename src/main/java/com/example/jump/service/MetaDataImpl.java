@@ -1,11 +1,6 @@
 package com.example.jump.service;
 
-import com.example.jump.domain.ClientSupportApi;
 import com.example.jump.domain.MetaApi;
-import com.example.jump.domain.SearchApi;
-import com.example.jump.entity.ClubMember;
-import com.example.jump.repository.ClientSupportApiRepository;
-import com.example.jump.repository.ClubMemberRepository;
 import com.example.jump.repository.MetaRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
@@ -22,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,20 +26,16 @@ import java.net.SocketException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 
 @RequiredArgsConstructor
-@Service    // 해당 클래스를 스프링의 서비스로 인식
-public class MetaServiceImpl implements MetaService {
+@Service    // 스프링의 서비스
+public class MetaDataImpl implements MetaData {
 
-    private final MetaRepository metaRepository;    // 레퍼지토리 객체 생성
-    private final ClientSupportApiRepository clientSupportApiRepository;    // 고객지원 테이블에 접근하기 위한 객체
-
-    private final ClubMemberRepository clubMemberRepository; // 회원정보를 가져오기 위한 객체
+    private final MetaRepository metaRepository;    // 메타정보 테이블에 접근
 
     public Page<MetaApi> getList(int page, String type) {   // 페이지로 분할해서 전체 조회
 
@@ -57,9 +47,8 @@ public class MetaServiceImpl implements MetaService {
         }
         return this.metaRepository.findAllByMetaType(pageable, type);
     }
-
     @Override
-    public List<MetaApi> findAll(String type) { // 전체 조회
+    public List<MetaApi> findAll(String type) { // 전체 조회 (Json으로 출력하기 위해서)
 
         return this.metaRepository.findAllByMetaType(type);
     }
@@ -72,15 +61,13 @@ public class MetaServiceImpl implements MetaService {
     public void delete(String[] id) {       // 삭제
         int length = id.length;
 
-        for (int i = 0; i < length; i++) {  // 삭제할 id값들을 반복함.
+        for (int i = 0; i < length; i++) {  // 삭제할 id 값들을 반복함.
             Optional<MetaApi> ID = this.metaRepository.findById(id[i]);
             if (ID.isPresent())  // 값이 있다면
                 this.metaRepository.delete(ID.get());   //  해당 객체 삭제
         }
     }
-
     public void save(MetaApi meta) {   // 수정
-
         this.metaRepository.save(meta);
     }
 
@@ -93,7 +80,7 @@ public class MetaServiceImpl implements MetaService {
         map.put("코트라", "http://openknowledge.kotra.or.kr/handle/2014.oak/");
         map.put("현행법령", "http://www.law.go.kr/DRF/lawSearch.do?OC=helena0809&target=law&");
 
-        // json배열
+        // json 배열
         JSONArray jArray = null;
         // 데이터 원본의 value 리스트
         List<JSONObject> values = new ArrayList<>();
@@ -105,8 +92,7 @@ public class MetaServiceImpl implements MetaService {
         if (type.equals("현행법령")) {
             try {
                 for (int num = 1; num < 264; num++) {
-
-                    URL url = new URL(map.get(type) + "type=XML&page=" + num); /*url 주소*/
+                    URL url = new URL(map.get(type) + "type=XML&page=" + num);
                     // Http연결을 위한 객체 생성
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("GET");
@@ -116,36 +102,37 @@ public class MetaServiceImpl implements MetaService {
                     BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
                     StringBuffer result = new StringBuffer();
                     String re = null;
-                    while ((re = br.readLine()) != null)    // 받아올 값이 있으면
+                    while ((re = br.readLine()) != null)// 받아올 값이 있으면
                         result.append(re);  //  StringBuffer 객체에 데이터 추가
 
                     JSONObject jsonObject = XML.toJSONObject(result.toString());
                     JSONObject jsonObject2 = jsonObject.getJSONObject("LawSearch");
                     jArray = jsonObject2.getJSONArray("law");
 
-                    for (int i = 0; i < jArray.length(); i++) { //for문을 통해 JsonArray의 수 만큼 리스트 안의 객체를 분리
+                    for (int i = 0; i < jArray.length(); i++) {  // for문을 통해 JsonArray의 수만큼 리스트 안의 객체를 분리
 
                         JSONObject item = (JSONObject) jArray.get(i);
                         // 원하는 항목명을 Parsing 해서 형식에 맞춰 변수에 저장
                         try {
 
-                            mappingValue[0] = ("{" + quotes + "org" + quotes + ":" + quotes + item.get("법령명한글").toString() + quotes + "}"); // Title
+                            String org = "\"org\"";
+                            mappingValue[0] = ("{" + org + ":" + quotes + item.get("법령명한글").toString() + quotes + "}"); // Title
 
                             if (item.get("법령약칭명").equals("")) {    // 값이 없으면
-                                mappingValue[1] = (("{" + quotes + "org" + quotes + ":" + quotes + item.get("법령명한글").toString() + quotes + "}"));   // Subject
+                                mappingValue[1] = (("{" + org + ":" + quotes + item.get("법령명한글").toString() + quotes + "}"));   // Subject
                             } else {
-                                mappingValue[1] = (("{" + quotes + "org" + quotes + ":" + quotes + item.get("법령약칭명").toString() + quotes + "}"));   // Subject
+                                mappingValue[1] = (("{" + org + ":" + quotes + item.get("법령약칭명").toString() + quotes + "}"));   // Subject
                             }
-                            mappingValue[2] = (("{" + quotes + "summary" + quotes + ":{" + quotes + "org" + quotes + ":" + quotes + item.get("법령명한글") + quotes + "}}")); // 설명
-                            mappingValue[3] = ("{" + quotes + "org" + quotes + ":" + quotes + item.get("소관부처명").toString() + quotes + "}");
-                            mappingValue[4] = (("[{" + quotes + "org" + quotes + ":" + quotes + item.get("소관부처명") + quotes + "," + quotes + "role" + quotes + ":" + quotes + "author" + quotes + "}]"));
+                            mappingValue[2] = (("{" + quotes + "summary" + quotes + ":{" + org + ":" + quotes + item.get("법령명한글") + quotes + "}}")); // 설명
+                            mappingValue[3] = ("{" + org + ":" + quotes + item.get("소관부처명").toString() + quotes + "}");
+                            mappingValue[4] = (("[{" + org + ":" + quotes + item.get("소관부처명") + quotes + "," + quotes + "role" + quotes + ":" + quotes + "author" + quotes + "}]"));
                             mappingValue[5] = ("{" + quotes + "issued" + quotes + ":" + quotes + item.get("시행일자").toString() + quotes + "," + quotes + "created" + quotes + ":" + quotes + item.get("공포일자").toString() + quotes + "}");
-                            mappingValue[6] = ("{" + quotes + "org" + quotes + ":" + quotes + "ko" + quotes + "}");
+                            mappingValue[6] = ("{" + org + ":" + quotes + "ko" + quotes + "}");
                             mappingValue[7] = ("{" + quotes + "site" + quotes + ":" + quotes + item.get("법령일련번호").toString() + quotes + "," + quotes + "url" + quotes + ":" + quotes + item.get("법령상세링크").toString() + quotes + "}");
-                            mappingValue[8] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
+                            mappingValue[8] = (("{" + org+ ":" + quotes + quotes + "}"));
                             mappingValue[9] = ("{" + quotes + "isPartOF" + quotes + ":" + quotes + item.get("제개정구분명").toString() + quotes + "}");
-                            mappingValue[10] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
-                            mappingValue[11] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
+                            mappingValue[10] = (("{" + org + ":" + quotes + quotes + "}"));
+                            mappingValue[11] = (("{" + org + ":" + quotes + quotes + "}"));
 
                             MetaApi meta = new MetaApi(item.get("법령ID").toString(), "", type,    // 생성자를 통한 객체 초기화
                                     (mappingValue[0]),
@@ -170,93 +157,70 @@ public class MetaServiceImpl implements MetaService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (type.equals("코트라")) {    // Open Access Korea 데이터
-            //웹에서 내용을 가져온다.
+        } else if (type.equals("코트라")) {    // Open Access Korea Data (Web Crawling)
             int num = 0;
-            try {
+            String[] menu = {"Title", "Corporate Author", "Personal Author", "Issue Date", "Publisher", "Series/Report No.", "Description", "Table Of Contents", "ISBN", "Citation", "URI", "Language", "Subject", "Appears in Collections"};
+            String[] key = new String[14];      // 정제 후 칼럼
+            String[] value = new String[14];    // 정제 후 데이터
+            String[] rawValue = new String[15]; // 정제 후 DB 형식에 맞는 데이터
 
+            try {
                 for (num = 2000; num < 3000; num++) {
-                    // Jsoup: 자바에서 html파싱을 위한 라이브러리,    url 접속을 위한 connection객체를 반환
+                    // Jsoup: 자바에서 html 파싱을 위한 라이브러리, url 접속을 위한 connection 객체를 반환
                     Document doc = null;
                     try {
                         doc = Jsoup.connect(map.get("코트라") + num).get();
                     } catch (Exception e) {
                         continue;
                     }
-
                     Elements[] column = new Elements[14];
                     Elements[] content = new Elements[14];
-
-                    // html파싱 후 칼럼과 내용을 담음.
+                    // html 파싱 후 칼럼과 내용을 담음.
                     try {
-                        for (int i = 0; i < 14; i++) {
-                            column[i] = doc.select("#con_h > div.item_dl1 > dl:nth-child(" + (i + 1) + ") > dt");
-                        }
-                        for (int i = 0; i < 14; i++) {
-                            content[i] = doc.select("#con_h > div.item_dl1 > dl:nth-child(" + (i + 1) + ") > dd");
+                        for (int i = 1; i < 15; i++) {
+                            column[i] = doc.select("#con_h > div.item_dl1 > dl:nth-child(" + i + ") > dt");
+                            content[i] = doc.select("#con_h > div.item_dl1 > dl:nth-child(" + i + ") > dd");
                         }
                     } catch (Exception e) {
                         continue;
                     }
 
-                    String a = null;
-                    String b = null;
-                    String[] menu = {"Title", "Corporate Author", "Personal Author", "Issue Date", "Publisher", "Series/Report No.", "Description", "Table Of Contents", "ISBN", "Citation", "URI", "Language", "Subject", "Appears in Collections"};
-                    String[] key = new String[14];      // 정제 전 칼럼
-                    String[] value = new String[14];    // 정제 전 데이터
-                    String[] key2 = new String[14];     // 정제 후 칼럼
-                    String[] value2 = new String[14];   // 정제 후 데이터
-
-                    for (int i = 0; i < 14; i++) {  // 칼럼을 키로 저장
-                        key[i] = column[i].toString();
+                    for (int i = 0; i < 14; i++) {
+                        key[i] = column[i].toString().replaceAll("<[^>]*>", "").replaceAll("&[^;]*;", "").replace("\n", "").trim();
+                        value[i] = content[i].toString().replaceAll("<[^>]*>", "").replaceAll("&[^;]*;", "").replace("\n", "");
                     }
-
-                    for (int i = 0; i < 14; i++) {  // 데이터를 값으로 저장
-                        value[i] = content[i].toString();
-                    }
-
-                    for (int k = 0; k < 14; k++) {    // 정규 표현식으로 태그 및 특수문자 삭제
-                        a = key[k].replaceAll("<[^>]*>", "").replaceAll("&[^;]*;", "").replace("\n", "");
-                        a = a.trim(); // 항목명 앞에 빈칸 삭제
-                        b = value[k].replaceAll("<[^>]*>", "").replaceAll("&[^;]*;", "").replace("\n", "");
-                        key2[k] = a.toString();      // 정제된 칼럼을 넣음
-                        value2[k] = b.toString();   // 정제된 데이터를 넣음
-                    }
-
-                    String[] rawValue = new String[15]; // 정제된 데이터를 DB 형식에 맞게 저장
-
-                    for (int i = 0; i < 14; i++) {      // 데이터의 순서가 다르므로 for문으로 반복하면서 맞는 값을 찾아줌.
+                    for (int i = 0; i < 14; i++) {      // 데이터의 순서가 다르므로 반복하면서 맞는 값을 찾아줌.
                         for (int j = 0; j < 14; j++) {
-                            if (key2[i].equals(menu[j])) {
-                                rawValue[j] = value2[i];
+                            if (key[i].equals(menu[j])) {
+                                rawValue[j] = value[i];
                                 break;
                             }
                         }
                     }
 
                     try {
+                        String org = "\"org\"";
                         // 받아온 데이터에 {와 "를 붙이기 위한 로직들
-                        mappingValue[0] = ("{" + quotes + "org" + quotes + ":" + quotes + rawValue[0] + quotes + "}");
+                        mappingValue[0] = ("{" + org + ":" + quotes + rawValue[0] + quotes + "}");
 
                         if (rawValue[12] != null) {
-                            mappingValue[1] = (("[{" + quotes + "org" + quotes + ":" + quotes + rawValue[12] + quotes + "}]"));
+                            mappingValue[1] = (("[{" + org + ":" + quotes + rawValue[12] + quotes + "}]"));
                         } else {
-                            mappingValue[1] = (("[{" + quotes + "org" + quotes + ":" + quotes + rawValue[0] + quotes + "}]"));
+                            mappingValue[1] = (("[{" + org + ":" + quotes + rawValue[0] + quotes + "}]"));
                         }
-                        mappingValue[2] = (("{" + quotes + "toc" + quotes + ":{" + quotes + "org" + quotes + ":" + quotes + rawValue[7] + quotes + "}," + quotes + "summary" + quotes + ":{" + quotes + "org" + quotes + ":" + quotes + rawValue[6] + quotes + "}"));
-                        mappingValue[3] = ("{" + quotes + "org" + quotes + ":" + quotes + rawValue[4] + quotes + "}");
-                        mappingValue[4] = (("[{" + "role" + quotes + ":" + quotes + "author" + quotes + "," + quotes + "org" + quotes + ":" + quotes + rawValue[2] + quotes + "," + quotes + "affiliation" + quotes + ":" + "[{" + quotes + "org" + quotes + ":" + quotes + rawValue[2] + quotes + "}]"));
+                        mappingValue[2] = (("{" + quotes + "toc" + quotes + ":{" + org + ":" + quotes + rawValue[7] + quotes + "}," + quotes + "summary" + quotes + ":{" + org + ":" + quotes + rawValue[6] + quotes + "}"));
+                        mappingValue[3] = ("{" + org + ":" + quotes + rawValue[4] + quotes + "}");
+                        mappingValue[4] = (("[{" + "role" + quotes + ":" + quotes + "author" + quotes + "," + org + ":" + quotes + rawValue[2] + quotes + "," + quotes + "affiliation" + quotes + ":" + "[{" + org + ":" + quotes + rawValue[2] + quotes + "}]"));
                         mappingValue[5] = ("{" + quotes + "issued" + quotes + ":" + quotes + rawValue[3] + quotes + "}");
-                        mappingValue[6] = ("{" + quotes + "org" + quotes + ":" + quotes + rawValue[11] + quotes + "}");
+                        mappingValue[6] = ("{" + org + ":" + quotes + rawValue[11] + quotes + "}");
                         mappingValue[7] = ("{" + quotes + "ibsn" + quotes + ":" + quotes + rawValue[8] + "," + "view:" + rawValue[10] + quotes + "}");
-                        mappingValue[8] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
+                        mappingValue[8] = (("{" + org + ":" + quotes + quotes + "}"));
                         mappingValue[9] = ("{" + quotes + "citation" + quotes + ":[" + quotes + rawValue[9] + quotes + "]}");
-                        mappingValue[10] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
-                        mappingValue[11] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
+                        mappingValue[10] = (("{" + org + ":" + quotes + quotes + "}"));
+                        mappingValue[11] = (("{" + org + ":" + quotes + quotes + "}"));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     MetaApi meta = new MetaApi(String.valueOf(num), "", type,    // 생성자를 통한 객체 초기화
                             (mappingValue[0]),
                             (mappingValue[1]),
@@ -280,7 +244,7 @@ public class MetaServiceImpl implements MetaService {
                 // map의 api유형으로 url값을 받아옴
                 URL url = new URL(map.get(type));
 
-                // Http연결을 위한 객체 생성
+                // Http 연결을 위한 객체 생성
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Content-type", "application/json");
@@ -290,7 +254,7 @@ public class MetaServiceImpl implements MetaService {
                 StringBuffer result = new StringBuffer();
                 String re = null;
                 while ((re = br.readLine()) != null)    // 받아올 값이 있으면
-                    result.append(re);  //  StringBuffer 객체에 데이터 추가
+                    result.append(re);   //  StringBuffer 객체에 데이터 추가
 
                 JSONObject jsonObject = XML.toJSONObject(result.toString());    // StringBuffer -> String으로 형 변환 후 XML데이터를 Json객체로 생성
                 JSONObject jsonObject2 = jsonObject.getJSONObject("response");  //  key값이 response인 jsonObject를 찾음
@@ -305,19 +269,20 @@ public class MetaServiceImpl implements MetaService {
 
                     try {
                         // 받아온 데이터에 {와 "를 붙이기 위한 로직들
-                        mappingValue[0] = ("{" + quotes + "org" + quotes + ":" + quotes + item.get("Title").toString() + quotes + "}");
+                        String org = "\"org\"";
+                        mappingValue[0] = ("{" + org + ":" + quotes + item.get("Title").toString() + quotes + "}");
                         if (!item.get("SubTitle1").equals("")) {
-                            mappingValue[1] = (("[{" + quotes + "org" + quotes + ":" + quotes + item.get("SubTitle1") + quotes + "}]"));
+                            mappingValue[1] = (("[{" + org + ":" + quotes + item.get("SubTitle1") + quotes + "}]"));
                         } else if (!item.get("SubTitle2").equals("")) {
-                            mappingValue[1] = (("[{" + quotes + "org" + quotes + ":" + quotes + item.get("SubTitle2") + quotes + "}]"));
+                            mappingValue[1] = (("[{" + org + ":" + quotes + item.get("SubTitle2") + quotes + "}]"));
                         } else if (!item.get("SubTitle3").equals("")) {
-                            mappingValue[1] = (("[{" + quotes + "org" + quotes + ":" + quotes + item.get("SubTitle3") + quotes + "}]"));
+                            mappingValue[1] = (("[{" + org + ":" + quotes + item.get("SubTitle3") + quotes + "}]"));
                         } else {
-                            mappingValue[1] = (("[{" + quotes + "org" + quotes + ":" + quotes + item.get("Title") + quotes + "}]"));
+                            mappingValue[1] = (("[{" + org + ":" + quotes + item.get("Title") + quotes + "}]"));
                         }
-                        mappingValue[2] = (("{" + quotes + "summary" + quotes + ":{" + quotes + "org" + quotes + ":" + quotes + item.get("DataContents") + quotes + "}"));
-                        mappingValue[3] = ("{" + quotes + "org" + quotes + ":" + quotes + item.get("MinisterCode").toString() + quotes + "}");
-                        mappingValue[4] = (("[{" + quotes + "org" + quotes + ":" + quotes + item.get("MinisterCode") + quotes + "," + quotes + "role" + quotes + ":" + quotes + "author" + quotes + "}]"));
+                        mappingValue[2] = (("{" + quotes + "summary" + quotes + ":{" + org + ":" + quotes + item.get("DataContents") + quotes + "}"));
+                        mappingValue[3] = ("{" + org + ":" + quotes + item.get("MinisterCode").toString() + quotes + "}");
+                        mappingValue[4] = (("[{" + org + ":" + quotes + item.get("MinisterCode") + quotes + "," + quotes + "role" + quotes + ":" + quotes + "author" + quotes + "}]"));
 
                         // 날짜 변환 로직
                         SimpleDateFormat dfFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");    // 파싱 전 형식
@@ -347,15 +312,14 @@ public class MetaServiceImpl implements MetaService {
                             mappingValue[9] = "{\"related\":\"\"}";     // FileName이나 FileUrl이 없는 경우에는
                         }
 
-                        mappingValue[10] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
-                        mappingValue[11] = (("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
+                        mappingValue[10] = (("{" + org + ":" + quotes + quotes + "}"));
+                        mappingValue[11] = (("{" + org + ":" + quotes + quotes + "}"));
 
                         // 정규 표현식으로 태그 및 특수문자들 제거
                         for (int j = 0; j < 12; j++) {
                             mappingValue[j] = mappingValue[j].replaceAll("<[^>]*>", "");   // HTML 태그 형식 삭제
                             mappingValue[j] = mappingValue[j].replaceAll("&[^;]*;", "");   // HTML 특수문자들 제거 ( ex: &nbsp; &middot )
                         }
-                        System.out.println(mappingValue[2]);
 
                     } catch (JSONException e) {
                         continue;
@@ -385,7 +349,6 @@ public class MetaServiceImpl implements MetaService {
             }
         }
     }
-
     public ResponseEntity<byte[]> saveCsv(String type) {    // CSV로 저장
 
         List<MetaApi> meta = metaRepository.findAllByMetaType(type);     // 유형에 해당하는 데이터를 받아옴
@@ -393,14 +356,14 @@ public class MetaServiceImpl implements MetaService {
         String[] menu = {"Title", "Subject", "Description", "Publisher", "Contributors", "Date",
                 "Language", "Identifier", "Format", "Relation", "Coverage", "Right"};   // CSV의 Header로 사용할 column들
 
-        byte[] csvFile = null;          // csv데이터를 담을 배열
-        CSVPrinter csvPrinter = null;   // csv형식의 값을 출력
-        StringWriter sw = new StringWriter();   // 문자열 writer객체 생성
+        byte[] csvFile = null;          // csv 데이터를 담을 배열
+        CSVPrinter csvPrinter = null;   // csv 형식의 값을 출력
+        StringWriter sw = new StringWriter();   // 문자열 writer 객체 생성
 
         try {
-            csvPrinter = new CSVPrinter(sw, CSVFormat.DEFAULT.withHeader(menu));        // csv의 헤더 생성
+            csvPrinter = new CSVPrinter(sw, CSVFormat.DEFAULT.withHeader(menu));         // csv 헤더 생성
             for (MetaApi m : meta) {
-                List<String> data = Arrays.asList(m.getMetaTitle(), m.getMetaSubjects(), // csv파일에 추가하고 싶은 데이터를 임의로 대입
+                List<String> data = Arrays.asList(m.getMetaTitle(), m.getMetaSubjects(), // csv 파일에 추가하고 싶은 데이터를 임의로 대입
                         m.getMetaDescription(), m.getMetaPublisher(),
                         m.getMetaContributor(), m.getMetaDate(),
                         m.getMetaLanguage(), m.getMetaIdentifier(),
@@ -418,11 +381,10 @@ public class MetaServiceImpl implements MetaService {
             header.setContentType(MediaType.valueOf("plain/text"));
 
             type = new String(type.getBytes("utf-8"), "ISO-8859-1"); // 파일명 한글 처리
-
             header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + type + ".csv");
             header.setContentLength(csvFile.length);
 
-            return new ResponseEntity<byte[]>(csvFile, header, HttpStatus.OK);  // HttpRequest에 대한 응답 데이터를 포함함.
+            return new ResponseEntity<>(csvFile, header, HttpStatus.OK);  // HttpRequest에 대한 응답 데이터를 포함함.
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -432,40 +394,7 @@ public class MetaServiceImpl implements MetaService {
                 e.printStackTrace();
             }
         }
-
         return null;    // 없으면 null
     }
 
-    @Override
-    public List<SearchApi> searchApi(String title) {
-        return null;
-    }
-
-    public ClientSupportApi supportSave(String category, String title, String name, String content, String method) {     // 고객지원 저장
-        ClientSupportApi api = new ClientSupportApi(category, title, name, content, method);         // 엔티티 객체 초기화
-        this.clientSupportApiRepository.save(api);
-        return api;
-    }    // 고객지원 저장
-
-    @Override
-    public List<ClientSupportApi> boardlist() {
-        return clientSupportApiRepository.findAll();
-    }
-
-    @Override
-    public ClientSupportApi boardview(Long CId) {
-        return clientSupportApiRepository.findById(CId).get();
-    }
-
-    @Override
-    public ClubMember getUser(String email) {   // 문의하기에 필요한 회원 정보를 가져옴
-
-        Optional<ClubMember> user = clubMemberRepository.findById(email);
-
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            return null;
-        }
-    }
 }

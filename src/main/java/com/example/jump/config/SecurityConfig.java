@@ -8,7 +8,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.ui.Model;
 
 @Configuration
 @Log4j2
@@ -27,7 +26,6 @@ public class SecurityConfig {
             auth.antMatchers("/sample/member").hasRole("USER");
         });
 
-        //http.formLogin();
         http.formLogin().loginPage("/").loginProcessingUrl("/login_post").defaultSuccessUrl("/index");
         http.csrf().disable();
         http.logout();

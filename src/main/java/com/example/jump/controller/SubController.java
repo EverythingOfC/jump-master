@@ -1,77 +1,100 @@
 package com.example.jump.controller;
 
-import com.example.jump.domain.MetaApi;
-import com.example.jump.service.MetaService;
-import org.springframework.data.domain.Page;
+import com.example.jump.domain.ClientSupportApi;
+import com.example.jump.domain.RegisterDTO;
+import com.example.jump.domain.SearchApi;
+import com.example.jump.entity.ClubMember;
+import com.example.jump.security.dto.ClubAuthMemberDTO;
+import com.example.jump.service.MetaMember;
+import com.example.jump.service.MetaSearch;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.List;
 
-import java.io.UnsupportedEncodingException;
-
-@RequiredArgsConstructor    // final이 붙은 속성을 초기화하는 생성자를 만들어줌.
+@RequiredArgsConstructor  // final이 붙은 필드 초기화
 @Controller
-public class SubController {
+public class SubController {    // 회원 정보, API 검색
 
-    private final MetaService metaService;  // 서비스 객체를 생성자 주입
+    @Autowired  // 자동으로 의존 객체를 찾아서 주입함
+    private MetaSearch metaSearch;
+    @Autowired
+    private MetaMember metaMember;
 
+    @GetMapping({"index","/"})    // 시작 페이지
+    public String index(Model model, @AuthenticationPrincipal ClubAuthMemberDTO user) { // 회원의 이름이 뜨게 함.
 
-    @GetMapping({"index","/"})    // 메인 페이지
-    public String index(Model model, @AuthenticationPrincipal User user) {
-        if(user == null){
-            model.addAttribute("message","null");
-        }
-        else{
-            model.addAttribute("message",user.getUsername());
-        }
+        if(user != null)
+            model.addAttribute("member",user.getName());
+
         return "index";
     }
 
-    @GetMapping("/jump/delete")      // 삭제
-    public String delete(@RequestParam(value="delete",defaultValue = "0") String[] metaId,
-                         @RequestParam(value="listPage")int listPage,
-                         @RequestParam(value="type")String type
-                         ){  // form의 checkbox에 있는 metaId값을 배열로 받아와서 여러 개의 데이터 삭제
+    @GetMapping("/jump/search")     // 검색 시 이동
+    public String search(@RequestParam(value = "search_kw", defaultValue = "") String search, Model model) {
 
-        metaService.delete(metaId);
+        List<SearchApi> searchApis = this.metaSearch.searchApi(search);
 
-        try {
-            type = new String(type.getBytes("utf-8"),"ISO-8859-1"); // 파일명 한글 처리
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+        model.addAttribute("search", searchApis);    // 검색 결과를 모델의 속성으로 저장
+        model.addAttribute("kw",search);
+
+        return "api";   // 자동으로 resources/templates/api;
+    }
+
+    @GetMapping("/login")   // 로그인
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/register")    // 등록 폼(Get)
+    public String register() {
+        return "register";
+    }
+
+    @PostMapping("/register")   // 등록 폼(Post)
+    public String postRegister(RegisterDTO registerDTO, Model model) {
+        if (metaMember.register(registerDTO)) {
+            return "redirect:/";
+        } else {
+            model.addAttribute("error", "--중복된 이메일--");
+            return "/register";
+        }
+    }
+
+    @GetMapping("/jump/supportHandle")  // 고객지원 처리
+    public String supportHandle(@RequestParam(value = "sup_category") String category,
+                                @RequestParam(value = "sup_title") String title,
+                                @RequestParam(value = "sup_name", defaultValue = "") String name,
+                                @RequestParam(value = "sup_content") String content,
+                                @RequestParam(value = "sup_email") String email, Model model) {
+
+        ClientSupportApi api = this.metaMember.supportSave(category, title, name, content, email);    // 고객지원 데이터 저장
+
+        return "redirect:/jump/search";  // api목록으로 이동
+    }
+
+    @GetMapping("/jump/support")        // 고객지원 폼
+    public String support(Model model, @AuthenticationPrincipal User user) {
+
+        ClubMember clubMember = metaMember.getUser(user.getUsername()); // 로그인된 회원 이메일을 넘김
+        List<SearchApi> search = metaSearch.findAll();  // 전체 API명 조회
+
+        if (clubMember == null) {
+            model.addAttribute("user", clubMember);
+        } else {
+            model.addAttribute("user", clubMember);
         }
 
-        return "redirect:/jump/list?listPage=" +listPage+"&type="+type;    // 삭제해도 페이지 값은 유지
+        model.addAttribute("search",search);
+
+        return "support";
     }
 
-    @GetMapping("/jump/detail")     // 상세
-    public String detail(Model model, String metaId, int listPage,String type){   // model클래스를 통해 데이터를 템플릿에 전달함.
-        MetaApi meta = metaService.getView(metaId);
-        model.addAttribute("metaView",meta);
-
-        model.addAttribute("listPage",listPage);
-        model.addAttribute("type",type);
-        return "detail";
-    }
-
-
-    @GetMapping("/jump/list")   // 전체보기
-    public String list(Model model, @RequestParam(value="listPage",defaultValue = "1") int page,
-                                    @RequestParam(value="type")String type){
-
-        Page<MetaApi> meta = metaService.getList(page-1,type);   // Page객체는 실제 페이지를 0부터 계산하므로
-
-        // 뷰에서 사용할 속성을 지정한다.
-        model.addAttribute("paging",meta);      // Page<MetaApi>객체
-        model.addAttribute("listPage",page);    // 현재 페이지 정보
-        model.addAttribute("type",type);        // 자료 유형
-        model.addAttribute("size",meta.getTotalElements());  // 데이터 개수
-
-        return "list";
-    }
 
 }

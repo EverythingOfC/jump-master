@@ -10,9 +10,9 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class MetaSearchImpl implements MetaSearch{   // 검색 서비스
+public class MetaSearchImpl implements MetaSearch{
 
-    private final MetaSearchRepository metaRepository;    // 검색 테이블에 접근하기 위한 객체
+    private final MetaSearchRepository metaRepository;    // 검색 테이블에 접근
 
     public List<SearchApi> searchApi(String title){     // 지정된 title로 검색
 

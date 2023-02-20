@@ -14,7 +14,6 @@ import java.util.Collection;
 @ToString
 public class ClubAuthMemberDTO extends User {
 
-
     private String email;
 
     private String name;
