@@ -33,9 +33,10 @@
             <img class="logo" th:src="@{/images/logo.png}" alt="LOGO">
             <span style="margin:0 2vw;" class="nav_title"><a href="/">메인으로</a></span>
         </div>
+
         <div class="search">
             <div class="input-bar">
-                <input type="text" placeholder="검색어를 입력해주세요" autocomplete="off" name="search" id="keyword"
+                <input type="text" autofocus placeholder="검색하려는 API명을 입력해주세요" autocomplete="off" name="search" id="keyword"
                        th:value="${kw}" style="z-index: 10;">
                 <button class="dictate">
                     <img class="btn_img" th:src="@{/images/mic.png}">
@@ -65,7 +66,6 @@
                 </form>
             </div>
         </div>
-        <script th:src="@{speech.js}"></script>
     </nav>
 </div>
 
@@ -525,6 +525,7 @@
 
 </div>
 
+<script th:src="@{speech2.js}"></script>
 </body>
 
 </html>

@@ -17,8 +17,6 @@ public class MetaSearchImpl implements MetaSearch{
     public List<SearchApi> searchApi(String title){     // 지정된 title로 검색
 
         return this.metaRepository.findByTitleContaining(title);   // 검색된 목록들을 반환
-
-        // ""
     }
 
     public List<SearchApi> findAll(){   // 전체 title 검색

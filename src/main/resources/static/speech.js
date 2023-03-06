@@ -23,12 +23,12 @@ const store = {
             store.isRecognizing = true;
         };
 
-        recognition.onresult = function(e) { //result이벤트는 음성 인식 서비스가 결과를 반환할 때 시작됩니다.
+        recognition.onresult = function(e) {   //result이벤트는 음성 인식 서비스가 결과를 반환할 때 시작됩니다.
             store.texts = Array.from(e.results)
                 .map(results => results[0].transcript).join("");
 
             console.log(store.texts)
-            $('input').value = store.texts;
+            $('input[name=kw]').value = store.texts;
         };
         /* // Speech API END */
 

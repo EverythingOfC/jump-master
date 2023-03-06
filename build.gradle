@@ -25,6 +25,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'  // Java Mail 라이브러리
     testImplementation 'org.springframework.security:spring-security-test'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'   // 직접 관련이 있는 모듈들만 컴파일 함

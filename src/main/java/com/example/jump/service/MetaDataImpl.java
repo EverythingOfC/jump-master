@@ -48,12 +48,12 @@ public class MetaDataImpl implements MetaData {
         return this.metaRepository.findAllByMetaType(pageable, type);
     }
     @Override
-    public List<MetaApi> findAll(String type) { // 전체 조회 (Json으로 출력하기 위해서)
+    public List<MetaApi> findAll(String type) {     // 전체 조회 (Json으로 출력하기 위해서)
 
         return this.metaRepository.findAllByMetaType(type);
     }
 
-    public MetaApi getView(String id) {    // 상세
+    public MetaApi getView(String id) {     // 상세
         Optional<MetaApi> ID = this.metaRepository.findById(id);
         return ID.isPresent() ? ID.get() : null;       // id에 해당하는 데이터가 있으면 불러옴
     }

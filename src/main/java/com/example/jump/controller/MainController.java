@@ -18,7 +18,7 @@ import java.util.List;
 @Controller
 public class MainController {   // API, JSON, OAK 처리
 
-    @Autowired  // 자동으로 의존 객체를 찾아서 주입함
+    @Autowired
     private MetaData metaService;
 
     @GetMapping("/jump/api")    // 해당 API 저장 및 출력

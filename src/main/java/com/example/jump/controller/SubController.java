@@ -9,6 +9,7 @@ import com.example.jump.service.MetaMember;
 import com.example.jump.service.MetaSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,16 +23,17 @@ import java.util.List;
 @Controller
 public class SubController {    // 회원 정보, API 검색
 
-    @Autowired  // 자동으로 의존 객체를 찾아서 주입함
+    @Autowired
     private MetaSearch metaSearch;
     @Autowired
     private MetaMember metaMember;
 
     @GetMapping({"index","/"})    // 시작 페이지
-    public String index(Model model, @AuthenticationPrincipal ClubAuthMemberDTO user) { // 회원의 이름이 뜨게 함.
+    public String index(Model model, @AuthenticationPrincipal ClubAuthMemberDTO user) {
 
-        if(user != null)
-            model.addAttribute("member",user.getName());
+        if(user != null){
+            model.addAttribute("member",user);    // 회원 저장
+        }
 
         return "index";
     }
@@ -59,12 +61,19 @@ public class SubController {    // 회원 정보, API 검색
 
     @PostMapping("/register")   // 등록 폼(Post)
     public String postRegister(RegisterDTO registerDTO, Model model) {
+
         if (metaMember.register(registerDTO)) {
             return "redirect:/";
         } else {
             model.addAttribute("error", "--중복된 이메일--");
             return "/register";
         }
+    }
+    @GetMapping("/delete")      // 회원 탈퇴
+    public String postDelete(@RequestParam(value="memberId") String email){
+        this.metaMember.delete(email);  // 회원 탈퇴
+        SecurityContextHolder.clearContext();   // 로그아웃 상태로 변경
+        return "redirect:/";
     }
 
     @GetMapping("/jump/supportHandle")  // 고객지원 처리
