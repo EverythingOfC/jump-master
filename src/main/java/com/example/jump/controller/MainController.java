@@ -76,7 +76,8 @@ public class MainController {   // API, JSON, OAK 처리
     public String list(Model model, @RequestParam(value="listPage",defaultValue = "1") int page,
                        @RequestParam(value="type")String type){
 
-        Page<MetaApi> meta = metaService.getList(page-1,type);   // Page객체는 실제 페이지를 0부터 계산하므로
+        // Page객체는 실제 페이지를 0부터 계산하므로
+        Page<MetaApi> meta = page>0? metaService.getList(page-1,type) : metaService.getList(1,type);
 
         // 뷰에서 사용할 속성을 지정한다.
         model.addAttribute("paging",meta);      // Page<MetaApi>객체

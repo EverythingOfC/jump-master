@@ -78,7 +78,7 @@ public class MetaDataImpl implements MetaData {
         map.put("정책뉴스", "http://apis.data.go.kr/1371000/policyNewsService/policyNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D&startDate=20211201&endDate=20211203");
         map.put("포토", "http://apis.data.go.kr/1371000/photoNewsService/photoNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D&startDate=20211201&endDate=20211203");
         map.put("코트라", "http://openknowledge.kotra.or.kr/handle/2014.oak/");
-        map.put("현행법령", "http://www.law.go.kr/DRF/lawSearch.do?OC=helena0809&target=law&");
+        map.put("현행법령", "http://www.law.go.kr/DRF/lawSearch.do?OC=helena0809&target=law&type=XML&page=");
 
         // json 배열
         JSONArray jArray = null;
@@ -92,11 +92,13 @@ public class MetaDataImpl implements MetaData {
         if (type.equals("현행법령")) {
             try {
                 for (int num = 1; num < 264; num++) {
-                    URL url = new URL(map.get(type) + "type=XML&page=" + num);
+                    URL url = new URL(map.get(type) + num);
                     // Http연결을 위한 객체 생성
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setRequestMethod("GET");
                     urlConnection.setRequestProperty("Content-type", "application/json");
+                    urlConnection.setConnectTimeout(20000); //서버 연결 제한 시간
+                    urlConnection.setReadTimeout(20000);    //읽기 제한 시간
 
                     // url에서 불러온 데이터를 InputStream -> InputStreamReader -> BufferedReader -> readLine()로 받아옴.
                     BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
@@ -317,8 +319,7 @@ public class MetaDataImpl implements MetaData {
 
                         // 정규 표현식으로 태그 및 특수문자들 제거
                         for (int j = 0; j < 12; j++) {
-                            mappingValue[j] = mappingValue[j].replaceAll("<[^>]*>", "");   // HTML 태그 형식 삭제
-                            mappingValue[j] = mappingValue[j].replaceAll("&[^;]*;", "");   // HTML 특수문자들 제거 ( ex: &nbsp; &middot )
+                            mappingValue[j] = mappingValue[j].replaceAll("<[^>]*>|&[^;]*;", "");   // <나 &로 시작하는 html태그와 특수문자들을 제거한다.
                         }
 
                     } catch (JSONException e) {

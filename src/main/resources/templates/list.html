@@ -55,13 +55,10 @@
         <li class="page-item">
 
             <a th:href="@{|?listPage=1&type=${type}|}" style="margin-right:1vw; font-weight:bold;"><span>처음</span></a>
-            <span th:switch="${(paging.number)-10 < 1}">
-            <a th:case="${true}"
-               th:href="@{|?listPage=1&type=${type}|}"> <!-- 처음으로 링크 이동 -->
-                <span>이전</span>
-            </a>
+            <span th:switch="${(paging.number)-5 < 0}">
+
             <a th:case="${false}"
-               th:href="@{|?listPage=${(paging.number)-10}&type=${type}|}"> <!-- 이전 페이지로 링크 이동 -->
+               th:href="@{|?listPage=${(paging.number)-4}&type=${type}|}"> <!-- 이전 페이지로 링크 이동 -->
                 <span>이전</span>
             </a>
             </span>
@@ -69,7 +66,7 @@
         </li>
 
         <li th:each="page: ${#numbers.sequence(1, paging.totalPages)}"
-            th:if="${page >= (paging.number)-4 and page <= paging.number+5}"
+            th:if="${page > (paging.number)-4 and page < paging.number+6}"
             th:classappend="${page == paging.number+1} ? 'active'"
             class="page-item">  <!-- 현재 페이지인 경우 활성화 -->
 
@@ -81,13 +78,9 @@
         <li class="page-item">
 
             <!-- 다음 페이지가 전체 페이지를 넘어가면 끝으로, 초과하지 않으면 그 다음 페이지로 이동-->
-            <span th:switch="${(paging.number)+10 > paging.totalPages}">
-            <a th:case="${true}"
-               th:href="@{|?listPage=${paging.totalPages}&type=${type}|}"> <!-- 끝 페이지로 링크 이동 -->
-                <span>다음</span>
-            </a>
+            <span th:switch="${(paging.number)+6 > paging.totalPages}">
             <a th:case="${false}"
-               th:href="@{|?listPage=${(paging.number)+10}&type=${type}|}"> <!-- 다음 페이지로 링크 이동 -->
+               th:href="@{|?listPage=${(paging.number)+6}&type=${type}|}"> <!-- 다음 페이지로 링크 이동 -->
                 <span>다음</span>
             </a>
             </span>

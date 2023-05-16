@@ -45,9 +45,8 @@ public class JumpApplicationTests {
         String service = "OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D";
 
         LocalDate now = LocalDate.now();    // 현재 날짜
-        LocalDate StartOrigin = LocalDate.of(2020,10,6);    // 처음 시작 날짜
-        LocalDate start = StartOrigin;
-        LocalDate end = StartOrigin;
+        LocalDate start = LocalDate.of(2020,10,6);    // 처음 시작 날짜
+        LocalDate end = start;
 
         StringBuffer result = new StringBuffer();
         DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");       // 날짜 포멧
@@ -57,11 +56,8 @@ public class JumpApplicationTests {
 
         try {
 
-            int k =0;
-            for(k=0; end.isBefore(now) || end.isEqual(now); k+=3){    // 종료 날짜가 현재 날짜보다 이전이면
+            while(end.isBefore(now) || end.isEqual(now)){    // 종료 날짜가 현재 날짜보다 이전이면
 
-
-                start = StartOrigin.plusDays(2);            // 원본 날짜의
                 end = start.plusDays(2);    // 시작날짜의 + 2
 
                 System.out.println(start);
@@ -78,7 +74,8 @@ public class JumpApplicationTests {
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.setRequestProperty("Content-type", "application/json");
-                urlConnection.setConnectTimeout(10000); //서버 연결 제한 시간
+                urlConnection.setConnectTimeout(20000); //서버 연결 제한 시간
+                urlConnection.setReadTimeout(20000);    //읽기 제한 시간
                 BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
                 String re = null;
                 while ((re = br.readLine()) != null)    // 받아올 값이 있으면
@@ -148,8 +145,7 @@ public class JumpApplicationTests {
 
                         // 정규 표현식으로 태그 및 특수문자들 제거
                         for (int j = 0; j < 12; j++) {
-                            mappingValue[j] = mappingValue[j].replaceAll("<[^>]*>","");
-                            mappingValue[j] = mappingValue[j].replaceAll("&[^;]*;", "");     // HTML태그 및 특수문자 제거
+                            mappingValue[j] = mappingValue[j].replaceAll("<[^>]*>|&[^;]*;", "");     // <나 &로 시작하는 html태그와 특수문자들을 제거한다.
                         }
 
 
@@ -172,7 +168,7 @@ public class JumpApplicationTests {
                     metaRepository.save(meta);  // Entity에 Meta데이터를 저장한다.
                 }
                 jArray.clear();
-
+                start = end.plusDays(1);  // 종료날짜 + 1
             }
         }
         catch(SocketException e){
