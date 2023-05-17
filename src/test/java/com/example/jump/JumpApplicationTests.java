@@ -95,7 +95,8 @@ public class JumpApplicationTests {
                 }
 
                 result.setLength(0);
-
+                jsonObject2.clear();
+                jsonObject.clear();
                 int length = jArray.length();
                 int size = metaRepository.findAll().size();
                 for (int i = 0; i < length; i++) {  // key값이 NewsItem인 객체들의 갯수만큼 반복

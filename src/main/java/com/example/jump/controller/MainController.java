@@ -23,6 +23,7 @@ public class MainController {   // API, JSON, OAK 처리
 
     @GetMapping("/jump/api")    // 해당 API 저장 및 출력
     public String api(@RequestParam(value = "type") String type) {
+
         this.metaService.getApi(type);     // api 출력을 위한 서비스 메소드
 
         try {
