@@ -22,9 +22,14 @@ public class MainController {   // API, JSON, OAK 처리
     private MetaData metaService;
 
     @GetMapping("/jump/api")    // 해당 API 저장 및 출력
-    public String api(@RequestParam(value = "type") String type) {
+    public String api(@RequestParam(value = "type") String type,
+                      @RequestParam(value="startDate",required = false)String startDate,
+                      @RequestParam(value="endDate",required = false)String endDate) {
 
-        this.metaService.getApi(type);     // api 출력을 위한 서비스 메소드
+        if(type.contains("update"))
+            this.metaService.getApiUpdate(type,startDate,endDate);
+        else
+            this.metaService.getApi(type);     // api 출력을 위한 서비스 메소드
 
         try {
             type = new String(type.getBytes("utf-8"), "ISO-8859-1");     //  쿼리스트링 한글 처리

@@ -3,6 +3,7 @@ package com.example.jump.service;
 import com.example.jump.domain.MetaApi;
 import com.example.jump.repository.MetaRepository;
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.asm.Advice;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.json.JSONArray;
@@ -113,7 +114,7 @@ public class MetaDataImpl implements MetaData {
 
                     br.close();
                     urlConnection.disconnect();
-                    
+
                     JSONObject jsonObject = XML.toJSONObject(result.toString());
                     JSONObject jsonObject2 = jsonObject.getJSONObject("LawSearch");
                     jsonObject.clear();
@@ -246,7 +247,7 @@ public class MetaDataImpl implements MetaData {
                 e.printStackTrace();
             }
         } else {
-            LocalDate now = LocalDate.of(2022, 8,1);    // 현재 날짜
+            LocalDate now = LocalDate.of(2022, 8, 1);    // 현재 날짜
             LocalDate start = LocalDate.of(2020, 8, 1);    // 처음 시작 날짜
             LocalDate end = start;
 
@@ -303,7 +304,7 @@ public class MetaDataImpl implements MetaData {
                     int length = jArray.length();
                     for (int i = 0; i < length; i++) {  // key값이 NewsItem인 객체들의 갯수만큼 반복
 
-                        final List<String> mappingValue = new ArrayList<>();
+                        List<String> mappingValue = new ArrayList<>();
                         JSONObject item = (JSONObject) jArray.get(i);    // JsonArray의 i+1번째 객체를 얻어옴.
                         try {
                             // 받아온 데이터에 {와 "를 붙이기 위한 로직들
@@ -355,7 +356,7 @@ public class MetaDataImpl implements MetaData {
 
                             // 정규 표현식으로 태그 및 특수문자들 제거
                             for (int j = 0; j < 12; j++) {
-                                mappingValue.set(j, mappingValue.get(0).replaceAll("<[^>]*>|&[^;]*;", ""));
+                                mappingValue.set(j, mappingValue.get(j).replaceAll("<[^>]*>|&[^;]*;", ""));
                             }
                         } catch (JSONException e) {
                             continue;
@@ -390,6 +391,169 @@ public class MetaDataImpl implements MetaData {
             }
         }
     }
+
+
+    public void getApiUpdate(String type,String startDate,String endDate) {  // 증분 데이터 처리
+
+        String uType = type.replace(" update","");
+
+        Map<String, String> map = new HashMap<>();
+        map.put("보도자료", "http://apis.data.go.kr/1371000/pressReleaseService/pressReleaseList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D");
+        map.put("정책뉴스", "http://apis.data.go.kr/1371000/policyNewsService/policyNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D");
+        map.put("포토", "http://apis.data.go.kr/1371000/photoNewsService/photoNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D");
+        JSONArray jArray = null;
+
+        // 데이터 매핑 후 value 리스트 ( Title ~ Right 칼럼들의 값 )
+        final char quotes = '"';          // 매핑시 ""안에 "을 넣기 위해 선언
+        final String org = "\"org\"";     // 매핑시 ""안에 \을 넣기 위해 선언
+
+        LocalDate start = LocalDate.of(Integer.parseInt(startDate.substring(0,4)),
+                Integer.parseInt(startDate.substring(4,6)), Integer.parseInt(startDate.substring(6,8)));    // 검사 시작 날짜
+        LocalDate end;  //  3일씩 끊어지는 종료날짜
+
+        LocalDate checkEnd = LocalDate.of(Integer.parseInt(endDate.substring(0,4)),
+                Integer.parseInt(endDate.substring(4,6)), Integer.parseInt(endDate.substring(6,8)));        // 검사 종료 날짜
+
+        StringBuilder result = new StringBuilder();
+        final DateTimeFormatter yyyyMMdd = DateTimeFormatter.ofPattern("yyyyMMdd");       // 날짜 포멧
+        HttpURLConnection urlConnection;
+        BufferedReader br;
+        final String mType = map.get(uType);
+        try {
+            // map의 api유형으로 url값을 받아옴
+            while (!start.isAfter(checkEnd)) {  // 시작 날짜가 종료 날짜 이전일 경우에만 돌아감.
+
+                end = start.plusDays(2);
+
+                String s = start.format(yyyyMMdd);
+                String d = end.format(yyyyMMdd);
+
+                System.out.println(end);
+                URL url = new URL(mType + "&startDate=" + s + "&endDate=" + d);
+
+                // Http 연결을 위한 객체 생성
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setRequestProperty("Content-type", "application/json");
+                urlConnection.setConnectTimeout(10000); //서버 연결 제한시간
+                urlConnection.setReadTimeout(10000);    //읽기 제한시간
+
+                // url에서 불러온 데이터를 InputStream -> InputStreamReader -> BufferedReader -> readLine()로 받아옴.
+                br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+                String re = null;
+                while ((re = br.readLine()) != null)    // 받아올 값이 있으면
+                    result.append(re);   //  StringBuffer 객체에 데이터 추가
+
+                br.close();
+                urlConnection.disconnect();
+
+                JSONObject jsonObject3;
+                try {
+                    JSONObject jsonObject = XML.toJSONObject(result.toString());    // StringBuilder -> String으로 형 변환 후 XML데이터를 Json객체로 생성
+                    JSONObject jsonObject2 = jsonObject.getJSONObject("response");  //  key값이 response인 jsonObject를 찾음
+                    jsonObject.clear();
+                    jsonObject3 = jsonObject2.getJSONObject("body");            // key값이 body인 jsonObject를 찾음
+                    jsonObject2.clear();
+                } catch (JSONException e) {
+                    System.out.println("해당 날짜 데이터의 response태그가 존재하지 않습니다.");
+                    start = end.plusDays(1);
+                    result.setLength(0);
+                    continue;
+                }
+
+                jArray = (JSONArray) jsonObject3.get("NewsItem");  //  key값이 NewsItem인 객체들을 JSON 배열로 만듬
+                result.setLength(0);
+                jsonObject3.clear();
+                int length = jArray.length();
+                for (int i = 0; i < length; i++) {  // key값이 NewsItem인 객체들의 갯수만큼 반복
+
+                    List<String> mappingValue = new ArrayList<>();
+                    JSONObject item = (JSONObject) jArray.get(i);    // JsonArray의 i+1번째 객체를 얻어옴.
+                    if (!item.get("ModifyDate").toString().equals(item.get("ApproveDate").toString())) {
+                        try {
+                            // 받아온 데이터에 {와 "를 붙이기 위한 로직들
+                            mappingValue.add("{" + org + ":" + quotes + item.get("Title").toString() + quotes + "}");
+
+                            if (!item.get("SubTitle1").equals("")) {
+                                mappingValue.add(("[{" + org + ":" + quotes + item.get("SubTitle1") + quotes + "}]"));
+                            } else if (!item.get("SubTitle2").equals("")) {
+                                mappingValue.add(("[{" + org + ":" + quotes + item.get("SubTitle2") + quotes + "}]"));
+                            } else if (!item.get("SubTitle3").equals("")) {
+                                mappingValue.add(("[{" + org + ":" + quotes + item.get("SubTitle3") + quotes + "}]"));
+                            } else {
+                                mappingValue.add(("[{" + org + ":" + quotes + item.get("Title") + quotes + "}]"));
+                            }
+                            mappingValue.add(("{" + quotes + "summary" + quotes + ":{" + org + ":" + quotes + item.get("DataContents") + quotes + "}"));
+                            mappingValue.add("{" + org + ":" + quotes + item.get("MinisterCode").toString() + quotes + "}");
+                            mappingValue.add(("[{" + org + ":" + quotes + item.get("MinisterCode") + quotes + "," + quotes + "role" + quotes + ":" + quotes + "author" + quotes + "}]"));
+
+                            // 날짜 변환 로직
+                            SimpleDateFormat dfFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");    // 파싱 전 형식
+                            SimpleDateFormat newDtFormat = new SimpleDateFormat("yyyy-MM-dd"); // 파싱 후 형식
+                            String strDate = item.get("ModifyDate").toString();   // jsonObject의 get메소드로 ModifyDate를 String으로 변환
+                            String strDate2 = item.get("ApproveDate").toString(); // jsonObject의 get메소드로 ApproveDate을 String으로 변환
+                            String dateTemp = "";
+                            String dateTemp2 = "";
+
+                            if (!strDate.equals("")) {    // ModifyDate가 값이 있으면 날짜 변환
+                                Date formatDate = dfFormat.parse(strDate);  // 기존의 날짜 형식으로 Date객체 생성
+                                dateTemp = newDtFormat.format(formatDate);  // 기존의 날짜 형식을 새로운 날짜 형식으로 변환
+                            }
+                            if (!strDate2.equals("")) {   // ApproveDate가 값이 있으면 날짜 변환
+                                Date formatDate2 = dfFormat.parse(strDate2);    // 기존의 날짜 형식으로 Date객체 생성
+                                dateTemp2 = newDtFormat.format(formatDate2);    // 기존의 날짜 형식을 새로운 날짜 형식으로 변환
+                            }
+
+                            mappingValue.add("{" + quotes + "modified" + quotes + ":" + quotes + dateTemp + "," + quotes + "available" + quotes + ":" + quotes + dateTemp2 + quotes + "}");
+                            mappingValue.add("{" + quotes + "org" + quotes + ":" + quotes + "ko" + quotes + "}");
+                            mappingValue.add("{" + quotes + "site" + quotes + ":" + quotes + item.get("NewsItemId").toString() + "," + "view:" + item.get("OriginalUrl").toString() + quotes + "}");
+                            mappingValue.add(("{" + quotes + "org" + quotes + ":" + quotes + quotes + "}"));
+
+                            try {
+                                mappingValue.add("{" + quotes + "related" + quotes + ":[" + quotes + item.get("FileName").toString() + quotes + "," + quotes + item.get("FileUrl").toString() + quotes + "]}");
+                            } catch (JSONException e) {
+                                mappingValue.add("{\"related\":\"\"}");     // FileName이나 FileUrl이 없는 경우에는
+                            }
+
+                            mappingValue.add(("{" + org + ":" + quotes + quotes + "}"));
+                            mappingValue.add(("{" + org + ":" + quotes + quotes + "}"));
+
+                            // 정규 표현식으로 태그 및 특수문자들 제거
+                            for (int j = 0; j < 12; j++) {
+                                mappingValue.set(j, mappingValue.get(j).replaceAll("<[^>]*>|&[^;]*;", ""));
+                            }
+                        } catch (JSONException e) {
+                            continue;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        MetaApi meta = new MetaApi(item.get("NewsItemId").toString(), "", type,    // 생성자를 통한 객체 초기화
+                                mappingValue.get(0),
+                                mappingValue.get(1),
+                                mappingValue.get(2),
+                                mappingValue.get(3),
+                                mappingValue.get(4),
+                                mappingValue.get(5),
+                                mappingValue.get(6),
+                                mappingValue.get(7),
+                                mappingValue.get(8),
+                                mappingValue.get(9),
+                                mappingValue.get(10),
+                                mappingValue.get(11));
+                        metaRepository.save(meta);  // Entity에 Meta데이터를 저장한다.
+                    }
+                    start = end.plusDays(1);
+                }
+                jArray.clear();
+            }
+        } catch (SocketException e) {
+            System.out.println("통신 오류입니다.");
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+}
 
     public ResponseEntity<byte[]> saveCsv(String type) {    // CSV로 저장
 

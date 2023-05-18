@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script th:src="@{/js/dateCheck.js}"></script>
     <title>문화체육관광부 정책브리핑 보도자료</title>
     <script>
         //버튼 이름 바뀜
@@ -75,7 +76,6 @@
             <h2>Open API 목록</h2>
         </div>
     </div>
-
     <div class="dataset-content">   <!-- API 목록 내용 -->
         <div class="title-area" th:each="sear,loop:${search}"
              th:if="${#strings.equals(sear.title, '문화체육관광부_정책브리핑_보도자료_API')}">
@@ -83,8 +83,9 @@
             <p>문화체육관광부_정책브리핑_보도자료_API</p>
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=보도자료'">JSON 출력</button>
-                <button type="button" onclick="location.href='/jump/api?type=보도자료'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=보도자료'">CSV 저장</button>
+                <button type="button" onclick="location.href='/jump/api?type=보도자료'">API 조회</button>
+                <button type="button" onclick="check('보도자료 update');">증분 API 조회</button>
             </div>
             <a href="https://www.data.go.kr/data/15095295/openapi.do" target="_blank"><span
                     class="original_site">원본 사이트</span></a>
@@ -143,7 +144,6 @@
                             <div class="img-copyright">
                                 <div class="img-copyright">
                                     <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
-                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
                                     </a>
                                 </div>
                                 <span>출처표시</span>
@@ -160,8 +160,9 @@
             <p>문화체육관광부_정책브리핑_정책뉴스_API</p>
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=정책뉴스'">JSON 출력</button>
-                <button type="button" onclick="location.href='/jump/api?type=정책뉴스'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=정책뉴스'">CSV 저장</button>
+                <button type="button" onclick="location.href='/jump/api?type=정책뉴스'">API 조회</button>
+                <button type="button" onclick="check('정책뉴스 update');">증분 API 조회</button>
             </div>
             <a href="https://www.data.go.kr/data/15095335/openapi.do" target="_blank"><span
                     class="original_site">원본 사이트</span></a>
@@ -220,7 +221,7 @@
                             <div class="img-copyright">
                                 <div class="img-copyright">
                                     <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
-                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                        <!--<img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">-->
                                     </a>
                                 </div>
                                 <span>공공저작물_출처표시</span>
@@ -238,8 +239,9 @@
             <p>문화체육관광부_정책브리핑_포토_API</p>
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=포토'">JSON 출력</button>
-                <button type="button" onclick="location.href='/jump/api?type=포토'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=포토'">CSV 저장</button>
+                <button type="button" onclick="location.href='/jump/api?type=포토'">API 조회</button>
+                <button type="button" onclick="check('포토 update');">증분 API 조회</button>
             </div>
             <a href="https://www.data.go.kr/data/15095300/openapi.do" target="_blank"><span
                     class="original_site">원본 사이트</span></a>
@@ -298,7 +300,7 @@
                             <div class="img-copyright">
                                 <div class="img-copyright">
                                     <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
-                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                        <!--<img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">-->
                                     </a>
                                 </div>
                                 <span>공공저작물_출처표시 + 상업적 이용금지 + 변경금지</span>
@@ -314,8 +316,9 @@
             <p>법제처_현행법령_API</p>
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=현행법령'">JSON 출력</button>
-                <button type="button" onclick="location.href='/jump/api?type=현행법령'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=현행법령'">CSV 저장</button>
+                <button type="button" onclick="location.href='/jump/api?type=현행법령'">API 조회</button>
+                <button type="button" onclick="check('현행법령 update');">증분 API 조회</button>
             </div>
             <a href="https://open.assembly.go.kr/portal/data/service/selectServicePage.do" target="_blank"><span
                     class="original_site">원본 사이트</span></a>
@@ -366,7 +369,7 @@
                             <div class="img-copyright">
                                 <div class="img-copyright">
                                     <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
-                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                        <!--<img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">-->
                                     </a>
                                 </div>
                                 <span>출처표시</span>
@@ -382,8 +385,9 @@
             <p>국회의원 발의법률안</p>
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=법률'">JSON 출력</button>
-                <button type="button" onclick="location.href='/jump/list?type=법률'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=법률'">CSV 저장</button>
+                <button type="button" onclick="location.href='/jump/list?type=법률'">API 조회</button>
+                <button type="button" onclick="check('법률 update');">증분 API 조회</button>
             </div>
             <a href="https://open.assembly.go.kr/portal/data/service/selectServicePage.do" target="_blank"><span
                     class="original_site">원본 사이트</span></a>
@@ -434,7 +438,7 @@
                             <div class="img-copyright">
                                 <div class="img-copyright">
                                     <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
-                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                        <!--<img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">-->
                                     </a>
                                 </div>
                                 <span>출처표시</span>
@@ -451,8 +455,9 @@
             <p>국립중앙도서관_OAK_Kotra</p>
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=코트라'">JSON 출력</button>
-                <button type="button" onclick="location.href='/jump/api?type=코트라'">API 조회</button>
                 <button type="button" onclick="location.href='/jump/save?type=코트라'">CSV 저장</button>
+                <button type="button" onclick="location.href='/jump/api?type=코트라'">API 조회</button>
+                <button type="button" onclick="check('코트라 update');">증분 API 조회</button>
             </div>
             <a href="http://openknowledge.kotra.or.kr/" target="_blank"><span class="original_site">원본 사이트</span></a>
 
@@ -510,7 +515,7 @@
                             <div class="img-copyright">
                                 <div class="img-copyright">
                                     <a href="http://ccl.cckorea.org/about/" target="_blank" title="새 창으로 열기">
-                                        <img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">
+                                        <!--<img th:src="@{/data-mark01.png}" th:width="80px" th:height="28px" alt="저작자표시">-->
                                     </a>
                                 </div>
                                 <span>출처표시</span>
@@ -525,7 +530,6 @@
 
 </div>
 
-<script th:src="@{speech2.js}"></script>
 </body>
 
 </html>

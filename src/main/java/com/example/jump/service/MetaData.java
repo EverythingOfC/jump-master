@@ -14,6 +14,7 @@ public interface MetaData {      // 메타정보 관련 인터페이스
     void delete(String[] id);       // api 삭제
     void save(MetaApi meta);        // api 저장
     void getApi(String type);       // 요청에 맞는 api 출력
+    void getApiUpdate(String type,String startDate,String endDate); // 요청에 맞는 증분데이터 처리
     ResponseEntity<byte[]> saveCsv(String type);    // csv 저장
 
 }
