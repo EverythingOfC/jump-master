@@ -52,7 +52,7 @@ public class MetaMemberImpl implements MetaMember{
         String host = "smtp.naver.com";
         String port = "465";
         String userName = "tkflwk23@naver.com";
-        String password = "@tjdwns12";
+        String password = "tjdwns12@@@@";
 
         if (result.isPresent()) {
             return false;
@@ -60,6 +60,7 @@ public class MetaMemberImpl implements MetaMember{
             ClubMember clubMember = ClubMember.builder()
                     .email(registerDTO.getEmail())
                     .name(registerDTO.getName())
+                    .root(registerDTO.getRoot())
                     .fromSocial(false)
                     .roleSet(new HashSet<>())
                     .password(passwordEncoder.encode(registerDTO.getPassword()))
@@ -77,7 +78,7 @@ public class MetaMemberImpl implements MetaMember{
 
             Session session = Session.getInstance(props, new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(userName, "@tjdwns12");   // 송신자의 이메일 주소 및 비밀번호
+                    return new PasswordAuthentication(userName, "tjdwns12@@@@");   // 송신자의 이메일 주소 및 비밀번호
                 }
             });
 
@@ -95,7 +96,7 @@ public class MetaMemberImpl implements MetaMember{
                 transport.connect(host,userName,password);  // SMTP 서버 주소, 발송자 ID, 비밀번호 와 연결
                 transport.sendMessage(mimeMessage,mimeMessage.getAllRecipients());
             } catch (MessagingException e) {
-                throw new RuntimeException(e);
+                System.out.println("존재하지 않는 메일입니다.");
             }
             return true;
         }

@@ -84,7 +84,8 @@
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=보도자료'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/save?type=보도자료'">CSV 저장</button>
-                <button type="button" onclick="location.href='/jump/api?type=보도자료'">API 조회</button>
+                <button type="button" th:if="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/apiR?type=보도자료'">API 등록</button>
+                <button type="button" th:unless="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/api?type=보도자료'">API 조회</button>
                 <button type="button" onclick="check('보도자료 update');">증분 API 조회</button>
             </div>
             <a href="https://www.data.go.kr/data/15095295/openapi.do" target="_blank"><span
@@ -161,7 +162,8 @@
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=정책뉴스'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/save?type=정책뉴스'">CSV 저장</button>
-                <button type="button" onclick="location.href='/jump/api?type=정책뉴스'">API 조회</button>
+                <button type="button" th:if="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/apiR?type=정책뉴스'">API 등록</button>
+                <button type="button" th:unless="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/api?type=정책뉴스'">API 조회</button>
                 <button type="button" onclick="check('정책뉴스 update');">증분 API 조회</button>
             </div>
             <a href="https://www.data.go.kr/data/15095335/openapi.do" target="_blank"><span
@@ -240,7 +242,8 @@
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=포토'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/save?type=포토'">CSV 저장</button>
-                <button type="button" onclick="location.href='/jump/api?type=포토'">API 조회</button>
+                <button type="button" th:if="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/apiR?type=포토'">API 등록</button>
+                <button type="button" th:unless="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/api?type=포토'">API 조회</button>
                 <button type="button" onclick="check('포토 update');">증분 API 조회</button>
             </div>
             <a href="https://www.data.go.kr/data/15095300/openapi.do" target="_blank"><span
@@ -317,7 +320,8 @@
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=현행법령'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/save?type=현행법령'">CSV 저장</button>
-                <button type="button" onclick="location.href='/jump/api?type=현행법령'">API 조회</button>
+                <button type="button" th:if="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/apiR?type=현행법령'">API 등록</button>
+                <button type="button" th:unless="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/api?type=현행법령'">API 조회</button>
                 <button type="button" onclick="check('현행법령 update');">증분 API 조회</button>
             </div>
             <a href="https://open.assembly.go.kr/portal/data/service/selectServicePage.do" target="_blank"><span
@@ -386,7 +390,8 @@
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=법률'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/save?type=법률'">CSV 저장</button>
-                <button type="button" onclick="location.href='/jump/list?type=법률'">API 조회</button>
+                <button type="button" th:if="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/apiR?type=법률'">API 등록</button>
+                <button type="button" th:unless="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/api?type=법률'">API 조회</button>
                 <button type="button" onclick="check('법률 update');">증분 API 조회</button>
             </div>
             <a href="https://open.assembly.go.kr/portal/data/service/selectServicePage.do" target="_blank"><span
@@ -456,7 +461,8 @@
             <div class="api-down">
                 <button type="button" onclick="location.href='/jump/json?type=코트라'">JSON 출력</button>
                 <button type="button" onclick="location.href='/jump/save?type=코트라'">CSV 저장</button>
-                <button type="button" onclick="location.href='/jump/api?type=코트라'">API 조회</button>
+                <button type="button" th:if="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/apiR?type=코트라'">API 등록</button>
+                <button type="button" th:unless="${member != null and #strings.equals(member.getRoot(),'1')}" onclick="location.href='/jump/api?type=코트라'">API 조회</button>
                 <button type="button" onclick="check('코트라 update');">증분 API 조회</button>
             </div>
             <a href="http://openknowledge.kotra.or.kr/" target="_blank"><span class="original_site">원본 사이트</span></a>

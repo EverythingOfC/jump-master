@@ -26,6 +26,8 @@ public class ClubMember extends BaseEntity {
 
     private boolean fromSocial;
 
+    private String root;
+
     @ElementCollection(fetch = FetchType.LAZY)
     private Set<ClubMemberRole> roleSet;
 

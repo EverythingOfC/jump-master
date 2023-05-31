@@ -25,7 +25,11 @@
         <ul class="top_menu">
             <li>
                 <div sec:authorize="hasRole('USER')" class="log_list">
-                    <span th:text="${member.getName()}" class="user-name"></span><span class="user-name1">님&nbsp; 환영합니다.</span>
+                    <span th:if="${#strings.equals(member.getRoot(),'1')}" th:text="${member.getName()}" class="user-name"></span>
+                    <span th:if="${#strings.equals(member.getRoot(),'1')}" style="color:white">(관리자)</span>
+                    <span th:unless="${#strings.equals(member.getRoot(),'1')}" th:text="${member.getName()}" class="user-name"></span>
+                    <span th:unless="${#strings.equals(member.getRoot(),'1')}" style="color:white">(사용자)</span>
+                    &emsp;
                 </div>
             </li>
             <li>

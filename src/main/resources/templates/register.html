@@ -25,6 +25,13 @@
                     <label class="sign_check">비밀번호를 입력해주세요.</label>
                     <input type="password" name="password" placeholder="password" class="sign-form">
                 </div>
+                <div>
+                    <label class="sign_check">권한을 선택해주세요.</label>&emsp;&nbsp;
+                    <label for="root">관리자</label>
+                    <input type="radio" id="root" checked name="root" value="1">
+                    <label for="user">사용자</label>
+                    <input type="radio" id="user" name="root" value="0">
+                </div>
                 <th:blcok>
                     <th:text>[[${error}]]</th:text>
                 </th:blcok>

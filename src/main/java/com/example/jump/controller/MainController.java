@@ -2,11 +2,13 @@ package com.example.jump.controller;
 
 
 import com.example.jump.domain.MetaApi;
+import com.example.jump.security.dto.ClubAuthMemberDTO;
 import com.example.jump.service.MetaSearch;
 import com.example.jump.service.MetaData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +23,10 @@ public class MainController {   // API, JSON, OAK 처리
     @Autowired
     private MetaData metaService;
 
-    @GetMapping("/jump/api")    // 해당 API 저장 및 출력
-    public String api(@RequestParam(value = "type") String type,
+
+
+    @GetMapping("/jump/apiR")       // 해당 API 등록 및 증분 (관리자)
+    public String apiR(@RequestParam(value = "type") String type,
                       @RequestParam(value="startDate",required = false)String startDate,
                       @RequestParam(value="endDate",required = false)String endDate) {
 
@@ -30,6 +34,14 @@ public class MainController {   // API, JSON, OAK 처리
             this.metaService.getApiUpdate(type,startDate,endDate);
         else
             this.metaService.getApi(type);     // api 출력을 위한 서비스 메소드
+
+        return "redirect:/jump/search";  // api 페이지로 이동
+    }
+
+
+
+    @GetMapping("/jump/api")    // 해당 API 출력
+    public String api(@RequestParam(value = "type") String type){
 
         try {
             type = new String(type.getBytes("utf-8"), "ISO-8859-1");     //  쿼리스트링 한글 처리
