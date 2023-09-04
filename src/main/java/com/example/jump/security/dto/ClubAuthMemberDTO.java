@@ -15,16 +15,16 @@ import java.util.Collection;
 public class ClubAuthMemberDTO extends User {
 
     private String email;
-
     private String name;
-
     private boolean fromSocial;
+    private String root;
 
-    public ClubAuthMemberDTO(String username, String password, boolean fromSocial,
+    public ClubAuthMemberDTO(String username, String password, boolean fromSocial,String root,
                              Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.email = username;
         this.fromSocial = fromSocial;
+        this.root = root;
     }
 
 }

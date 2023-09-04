@@ -43,6 +43,7 @@ public class ClubUserDetailsService implements UserDetailsService {
                 clubMember.getEmail(),
                 clubMember.getPassword(),
                 clubMember.isFromSocial(),
+                clubMember.getRoot(),
                 clubMember.getRoleSet().stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
                         .collect(Collectors.toSet())
@@ -50,6 +51,7 @@ public class ClubUserDetailsService implements UserDetailsService {
 
         clubAuthMember.setName(clubMember.getName());
         clubAuthMember.setFromSocial(clubMember.isFromSocial());
+        clubAuthMember.setRoot(clubMember.getRoot());
 
         return clubAuthMember;
     }

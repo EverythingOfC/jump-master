@@ -39,12 +39,15 @@ public class SubController {    // 회원 정보, API 검색
     }
 
     @GetMapping("/jump/search")     // 검색 시 이동
-    public String search(@RequestParam(value = "search_kw", defaultValue = "") String search, Model model) {
+    public String search(@AuthenticationPrincipal ClubAuthMemberDTO user,@RequestParam(value = "search_kw", defaultValue = "") String search, Model model) {
 
         List<SearchApi> searchApis = this.metaSearch.searchApi(search);
 
         model.addAttribute("search", searchApis);    // 검색 결과를 모델의 속성으로 저장
         model.addAttribute("kw",search);
+        if(user != null){
+            model.addAttribute("member",user);    // 회원 저장
+        }
 
         return "api";   // 자동으로 resources/templates/api;
     }
