@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface MetaRepository extends JpaRepository<MetaApi, String> { // 엔티티와 엔티티의 pk를 적어줌.
 
-    List<MetaApi> findAllByMetaType(String type);      // 유형으로 데이터를 찾아옴.
+    List<MetaApi> findAllByMetaTypeContaining(String type);   // 유형으로 데이터를 찾아옴.
     Page<MetaApi> findAllByMetaType(Pageable pageable, String type);      // 유형으로 데이터를 찾아와서 페이징 처리
     Page<MetaApi> findAll(Pageable pageable);           // 전체 페이징 처리
 

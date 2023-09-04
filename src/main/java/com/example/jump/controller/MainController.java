@@ -44,6 +44,7 @@ public class MainController {   // API, JSON, OAK 처리
     public @ResponseBody List<MetaApi> json(@RequestParam(value="type") String type){   // 키와 값 구조의 데이터를 JSON형태로 리턴
         List<MetaApi> metaApi = this.metaService.findAll(type); // 해당 형식의 데이터 저장
 
+        System.out.println(metaApi.get(0).getMetaId());
         return metaApi; // json형식의 데이터 리턴
     }
 
@@ -64,7 +65,7 @@ public class MainController {   // API, JSON, OAK 처리
     }
 
     @GetMapping("/jump/delete")      // 삭제
-    public String delete(@RequestParam(value="delete",defaultValue = "0") String[] metaId, // form의 checkbox에 있는 metaId값을 배열로 받아와서 여러 개의 데이터 삭제
+    public String delete(@RequestParam(value="delete",defaultValue = "0") List<String> metaId, // form의 checkbox에 있는 metaId값을 배열로 받아와서 여러 개의 데이터 삭제
                          @RequestParam(value="listPage")int listPage,
                          @RequestParam(value="type")String type
     ){

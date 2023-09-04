@@ -55,8 +55,7 @@ public class MetaDataImpl implements MetaData {
 
     @Override
     public List<MetaApi> findAll(String type) {     // 전체 조회 (Json으로 출력하기 위해서)
-
-        return this.metaRepository.findAllByMetaType(type);
+        return this.metaRepository.findAllByMetaTypeContaining(type);
     }
 
     public MetaApi getView(String id) {     // 상세
@@ -64,18 +63,13 @@ public class MetaDataImpl implements MetaData {
         return ID.isPresent() ? ID.get() : null;       // id에 해당하는 데이터가 있으면 불러옴
     }
 
-    public void delete(String[] id) {       // 삭제
-        int length = id.length;
-
-        for (int i = 0; i < length; i++) {  // 삭제할 id 값들을 반복함.
-            Optional<MetaApi> ID = this.metaRepository.findById(id[i]);
-            if (ID.isPresent())  // 값이 있다면
-                this.metaRepository.delete(ID.get());   //  해당 객체 삭제
-        }
+    public void delete(List<String> id) {       // 삭제
+        this.metaRepository.deleteAllByIdInBatch(id);   // 한번의 쿼리로 여러 데이터를 삭제
     }
 
     public void save(MetaApi meta) {   // 수정
         this.metaRepository.save(meta);
+
     }
 
     public void getApi(String type) {   // 해당 API를 저장 및 출력
@@ -86,6 +80,9 @@ public class MetaDataImpl implements MetaData {
         map.put("포토", "http://apis.data.go.kr/1371000/photoNewsService/photoNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D");
         map.put("코트라", "http://openknowledge.kotra.or.kr/handle/2014.oak/");
         map.put("현행법령", "http://www.law.go.kr/DRF/lawSearch.do?OC=helena0809&target=law&type=XML&page=");
+
+        // 객체가 하나씩 저장될 리스트
+        List<MetaApi> saveList = new ArrayList<>();
 
         // json 배열
         JSONArray jArray = null;
@@ -157,7 +154,7 @@ public class MetaDataImpl implements MetaData {
                                     mappingValue.get(10),
                                     mappingValue.get(11)
                             );
-                            metaRepository.save(meta);
+                            saveList.add(meta);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -241,13 +238,13 @@ public class MetaDataImpl implements MetaData {
                             mappingValue.get(10),
                             mappingValue.get(11)
                     );
-                    metaRepository.save(meta);  // Entity에 Meta데이터를 저장한다.
+                    saveList.add(meta);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {
-            LocalDate now = LocalDate.of(2022, 8, 1);    // 현재 날짜
+            LocalDate now = LocalDate.of(2022, 1, 1);    // 현재 날짜
             LocalDate start = LocalDate.of(2020, 8, 1);    // 처음 시작 날짜
             LocalDate end = start;
 
@@ -376,7 +373,7 @@ public class MetaDataImpl implements MetaData {
                                 mappingValue.get(9),
                                 mappingValue.get(10),
                                 mappingValue.get(11));
-                        metaRepository.save(meta);  // Entity에 Meta데이터를 저장한다.
+                        saveList.add(meta);
                     }
                     jArray.clear();
                     start = end.plusDays(1);
@@ -390,6 +387,7 @@ public class MetaDataImpl implements MetaData {
                 e.printStackTrace();
             }
         }
+        metaRepository.saveAll(saveList);
     }
 
 
@@ -402,6 +400,8 @@ public class MetaDataImpl implements MetaData {
         map.put("정책뉴스", "http://apis.data.go.kr/1371000/policyNewsService/policyNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D");
         map.put("포토", "http://apis.data.go.kr/1371000/photoNewsService/photoNewsList?serviceKey=OyfKMEU9NFp%2FBjVq6X4XzOKgG0iCkwCWtmQNFtDKPlfCOoqhQBo6DhgyLTsJxe5JNjyRns4f2IZ0DmneSFw0Xw%3D%3D");
         JSONArray jArray = null;
+
+        List<MetaApi> saveList = new ArrayList<>();
 
         // 데이터 매핑 후 value 리스트 ( Title ~ Right 칼럼들의 값 )
         final char quotes = '"';          // 매핑시 ""안에 "을 넣기 위해 선언
@@ -428,7 +428,6 @@ public class MetaDataImpl implements MetaData {
                 String s = start.format(yyyyMMdd);
                 String d = end.format(yyyyMMdd);
 
-                System.out.println(end);
                 URL url = new URL(mType + "&startDate=" + s + "&endDate=" + d);
 
                 // Http 연결을 위한 객체 생성
@@ -540,12 +539,13 @@ public class MetaDataImpl implements MetaData {
                                 mappingValue.get(9),
                                 mappingValue.get(10),
                                 mappingValue.get(11));
-                        metaRepository.save(meta);  // Entity에 Meta데이터를 저장한다.
+                        saveList.add(meta);
                     }
                     start = end.plusDays(1);
                 }
                 jArray.clear();
             }
+            metaRepository.saveAll(saveList);
         } catch (SocketException e) {
             System.out.println("통신 오류입니다.");
             e.printStackTrace();
@@ -557,7 +557,7 @@ public class MetaDataImpl implements MetaData {
 
     public ResponseEntity<byte[]> saveCsv(String type) {    // CSV로 저장
 
-        List<MetaApi> meta = metaRepository.findAllByMetaType(type);     // 유형에 해당하는 데이터를 받아옴
+        List<MetaApi> meta = metaRepository.findAllByMetaTypeContaining(type);     // 유형에 해당하는 데이터를 받아옴
 
         String[] menu = {"Title", "Subject", "Description", "Publisher", "Contributors", "Date",
                 "Language", "Identifier", "Format", "Relation", "Coverage", "Right"};   // CSV의 Header로 사용할 column들

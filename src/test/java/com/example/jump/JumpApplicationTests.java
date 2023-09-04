@@ -35,10 +35,10 @@ public class JumpApplicationTests {
         // JArray배열
         JSONArray jArray = null;
 
-        // 보도자료 원본의 value 리스트
+
         List<JSONObject> values = new ArrayList<>();
 
-        // 보도자료 매핑 후 value 리스트 ( Title ~ Right 칼럼들의 값 )
+
         String[] mappingValue = new String[12];
 
         String originUrl = "http://apis.data.go.kr/1371000/pressReleaseService/pressReleaseList";
